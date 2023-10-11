@@ -33,7 +33,40 @@ class fillMultimap
 		std::multimap<std::string, float> & _mp;
 };
 
+class MultimapInput
+{
+	public:
+		MultimapInput(const std::string fileName);
+		std::multimap<std::string, float> get_mp_input();
 
+	private:
+		const std::string _fileName;
+		std::multimap<std::string, float> _mp_input;
+};
+
+MultimapInput::MultimapInput(const std::string fileName) : _fileName(fileName)
+{
+	std::ifstream input_file(this->_fileName);
+
+	std::string temp;
+	std::getline(input_file, temp);
+	while (std::getline(input_file, temp))
+	{
+		int indexVL = temp.find(" | ");
+		std::string date = temp.substr(0, indexVL);
+		float value = atof((temp.substr(indexVL + 3, temp.size())).c_str());
+		//std::cout << date << " " << value << std::endl;
+		this->_mp_input.insert(std::make_pair(date, value));
+
+
+	}
+
+};
+
+std::multimap<std::string, float> MultimapInput::get_mp_input()
+{
+	return this->_mp_input;
+};
 
 int main()
 {
@@ -54,23 +87,23 @@ int main()
     //     std::cout << itr->first << " => " << itr->second << std::endl;
     // }
 
-	std::ifstream input_file("input.txt");
-	std::multimap<std::string, int> mp_input;
+	// std::ifstream input_file("input.txt");
+	// std::multimap<std::string, float> mp_input;
 
-	std::string temp;
-	std::getline(input_file, temp);
-	while (std::getline(input_file, temp))
-	{
-		//std::cout << temp << " : ";
-		//std::cout << temp.find(" | ") << std::endl;
-		int indexVL = temp.find(" | "); 
-		std::string date = temp.substr(0, indexVL);
-		int value = atoi((temp.substr(indexVL + 3, temp.size())).c_str());
-		//std::cout << "date = " << date << " value = " << value <<std::endl;
-		mp_input.insert(std::make_pair(date, value));
-	}
+	// std::string temp;
+	// std::getline(input_file, temp);
+	// while (std::getline(input_file, temp))
+	// {
+	// 	//std::cout << temp << " : ";
+	// 	//std::cout << temp.find(" | ") << std::endl;
+	// 	int indexVL = temp.find(" | ");
+	// 	std::string date = temp.substr(0, indexVL);
+	// 	float value = atof((temp.substr(indexVL + 3, temp.size())).c_str());
+	// 	//std::cout << "date = " << date << " value = " << value <<std::endl;
+	// 	mp_input.insert(std::make_pair(date, value));
+	// }
 
-
+	MultimapInput mp_in("input.txt");
 
 	// std::istream_iterator<std::string> it_input(input_file);
     // std::istream_iterator<std::string> end_input;
@@ -79,10 +112,10 @@ int main()
 	//++it_input;
 	//std::for_each(it_input, end_input, fillMultimap_input(data_input));
 
-    std::multimap<std::string, int>::iterator itr2;
+    std::multimap<std::string, float>::iterator itr2;
 
 	
-    for (itr2 = mp_input.begin(); itr2 != mp_input.end(); ++itr2)
+    for (itr2 = mp_in.get_mp_input().begin(); itr2 != mp_in.get_mp_input().end(); ++itr2)
 	{
         std::cout << itr2->first << " => " << itr2->second << std::endl;
     }

@@ -15,24 +15,26 @@ class Display
 		}
 };
 
-template <typename T, typename U>
 class fillMultimap
 {
 
 	public :
-		fillMultimap(const T key, const U value, std::multimap<T, U> & mp) : _date(key), _exchange_rate(value), _mp(mp)
-		{};
+		fillMultimap(std::string data, std::multimap<std::string, std::string> & mp) : _mp(mp)
+		{
+			int ind_coma = data.find(',');
+			this->_date = data.substr(0, ind_coma);
+			this->_exchange_rate = data.substr(ind_coma +1 , data.size());
+		};
 
-		void operator()(std::multimap<T, U> mp)
+		void operator()()
 		{
 			this->_mp.insert(std::make_pair(this->_date, this->_exchange_rate));
 		}
 
-		
 	private :
-		const T _date;
-		const U _exchange_rate;
-		std::multimap<T, U> & _mp;
+		std::string _date;
+		std::string _exchange_rate;
+		std::multimap<std::string, std::string> & _mp;
 
 
 };
@@ -43,28 +45,30 @@ int main()
 	std::istream_iterator<std::string> it(csv_file);
 	std::istream_iterator<std::string> end;
 
-	while (it!=end)
-	{
-
-		std::string data;
-
-		data = *it;
-
-		int ind_coma = (*it).find(',');
-
-		std::string date = data.substr(0, ind_coma);
-		std::string exchange_rate = data.substr(ind_coma +1 , (*it).size());
-
-		std::cout << date << " => " << exchange_rate << std::endl;
-
-		/* Here is some parsing */
-
-		++it;
-	}
-
 	std::multimap<std::string, std::string> data_map;
+	
+	for_each(it, end, fillMultimap(*it, data_map));
+	
+	// while (it!=end)
+	// {
 
-	//generate(it, end, fillMultimap());
+	// 	std::string data;
+
+	// 	data = *it;
+
+	// 	int ind_coma = (*it).find(',');
+
+	// 	std::string date = data.substr(0, ind_coma);
+	// 	std::string exchange_rate = data.substr(ind_coma +1 , (*it).size());
+
+	// 	std::cout << date << " => " << exchange_rate << std::endl;
+
+	// 	/* Here is some parsing */
+
+	// 	++it;
+	// }
+
+
 
 	return 0;
 }

@@ -4,15 +4,16 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <ctime>
 
 class Display
 {
-public:
-    template <typename T>
-    void operator()(T & a)
-    {
-        std::cout << a << " - ";
-    }
+	public:
+		template <typename T>
+		void operator()(T & a)
+		{
+			std::cout << a.first << " => " << a.second << std::endl;
+		}
 };
 
 class fillMultimap
@@ -36,15 +37,14 @@ class fillMultimap
 class MultimapInput
 {
 	public:
-		MultimapInput(const std::string fileName);
-		std::multimap<std::string, float> get_mp_input();
+		MultimapInput(const std::string fileName, std::multimap<std::string, float> & mp_input);
 
 	private:
 		const std::string _fileName;
-		std::multimap<std::string, float> _mp_input;
+		std::multimap<std::string, float> & _mp_input;
 };
 
-MultimapInput::MultimapInput(const std::string fileName) : _fileName(fileName)
+MultimapInput::MultimapInput(const std::string fileName, std::multimap<std::string, float> & mp_input) : _fileName(fileName), _mp_input(mp_input)
 {
 	std::ifstream input_file(this->_fileName);
 
@@ -53,72 +53,226 @@ MultimapInput::MultimapInput(const std::string fileName) : _fileName(fileName)
 	while (std::getline(input_file, temp))
 	{
 		int indexVL = temp.find(" | ");
-		std::string date = temp.substr(0, indexVL);
-		float value = atof((temp.substr(indexVL + 3, temp.size())).c_str());
-		//std::cout << date << " " << value << std::endl;
-		this->_mp_input.insert(std::make_pair(date, value));
-
-
+		float value = 0;
+		std::string date;
+		if (indexVL == 10)
+		{
+			date = temp.substr(0, indexVL);
+			value = atof((temp.substr(indexVL + 3, temp.size())).c_str());
+			this->_mp_input.insert(std::make_pair(date, value));
+		}
+		else
+		{
+			date = temp;
+			this->_mp_input.insert(std::make_pair(date, value));
+		}
 	}
 
 };
 
-std::multimap<std::string, float> MultimapInput::get_mp_input()
+// class BitcoinExchange
+// {
+// 	public :
+
+
+// 	private :
+//     	std::multimap<std::string, float> mp_data;
+// 		std::multimap<std::string, float> mp_input;
+
+
+
+// }
+
+bool date_format_is_valid(std::string date)
 {
-	return this->_mp_input;
+	std::istringstream str_f(date);
+	int n;
+	char c;
+
+	str_f >> n >> c;
+	if ((n < 1900 || n > 9999) || (c != '-'))
+	{
+		return false;
+	}
+	
+	str_f >> n >> c;
+	if ((n < 1 || n > 12) || (c != '-'))
+	{
+		return false;
+	}
+	//std::cout << "n = " << n << " c = " << c << std::endl;
+
+	str_f >> n >> c;
+	if ((n < 1 || n > 31) || (c != '|'))
+	{
+		return false;
+	}	
+	//std::cout << "n = " << n << " c = " << c << std::endl;
+
+	return true;
+}
+
+bool value_format_is_valid (std::string value)
+{
+	std::istringstream str_f(value);
+	char c;
+	
+	str_f >> c;
+	if (c == '-')
+	{
+		str_f >> c;
+	}
+
+	while (str_f)
+	{
+		if ((c < '0' || c > '9') && c != '.')
+		{
+			//std::cout << "ba non la c est pas un float mec (" << c << ')' <<std::endl;
+			return false;
+		}
+		str_f >> c;
+	}
+	return true;
+}
+
+class Date_tm
+{
+	public :
+		Date_tm(std::string str_date);
+		bool operator<(Date_tm &rhs);
+		tm get_tm_date();
+
+	private :
+		tm _tm_date;
 };
+
+tm Date_tm::get_tm_date()
+{
+	return this->_tm_date;
+};
+
+
+bool Date_tm::operator<(Date_tm &rhs)
+{
+	if (this->_tm_date.tm_year > rhs.get_tm_date().tm_year)
+	{
+		return false;
+	}
+
+	if (this->_tm_date.tm_mon < rhs.get_tm_date().tm_mon)
+	{
+		return true;
+	}
+
+	if (this->_tm_date.tm_year < rhs.get_tm_date().tm_year)
+	{
+		return true;
+	}
+	return false;
+};
+
+Date_tm::Date_tm(std::string str_date)
+{
+	std::istringstream str_f(str_date);
+	int n;
+	char c;
+
+	this->_tm_date.tm_sec = 0;
+	this->_tm_date.tm_min = 0;
+	this->_tm_date.tm_hour = 0;
+	this->_tm_date.tm_wday = 0;
+	this->_tm_date.tm_yday = 0;
+	this->_tm_date.tm_isdst = 0;
+
+	str_f >> n >> c;
+	this->_tm_date.tm_year = n;
+	str_f >> n >> c;
+	this->_tm_date.tm_mon = n;
+	str_f >> n >> c;
+	this->_tm_date.tm_mday = n;
+
+
+	// std::cout << this->_tm_date.tm_year << std::endl;
+	// std::cout << this->_tm_date.tm_mon << std::endl;
+	// std::cout << this->_tm_date.tm_mday << std::endl;
+
+}
+
 
 int main()
 {
-    // std::ifstream csv_file("data.csv");
-    // std::istream_iterator<std::string> it(csv_file);
-    // std::istream_iterator<std::string> end;
+	// Date_tm("2022-12-29");
+	// std::string date1 = "2021-02-31";
+	// std::string date2 = "2021-01-20";
 
-    // std::multimap<std::string, float> data_map;
+	// std::cout << "T1 =" << (date1 < date2) << std::endl;
+	// std::cout << "T2 =" << (date2 < date1) << std::endl;
+
+    std::ifstream csv_file("data.csv");
+    std::istream_iterator<std::string> it(csv_file);
+    std::istream_iterator<std::string> end;
+    std::multimap<std::string, float> mp_data;
     
-	// ++it;
+	++it;
 
-    // std::for_each(it, end, fillMultimap(data_map));
+    std::for_each(it, end, fillMultimap(mp_data));
 
-    // std::multimap<std::string, float>::iterator itr;
 
-    // for (itr = data_map.begin(); itr != data_map.end(); ++itr)
-	// {
-    //     std::cout << itr->first << " => " << itr->second << std::endl;
-    // }
+	// std::for_each(mp_data.begin(), mp_data.end(), Display());
 
-	// std::ifstream input_file("input.txt");
 	// std::multimap<std::string, float> mp_input;
-
-	// std::string temp;
-	// std::getline(input_file, temp);
-	// while (std::getline(input_file, temp))
-	// {
-	// 	//std::cout << temp << " : ";
-	// 	//std::cout << temp.find(" | ") << std::endl;
-	// 	int indexVL = temp.find(" | ");
-	// 	std::string date = temp.substr(0, indexVL);
-	// 	float value = atof((temp.substr(indexVL + 3, temp.size())).c_str());
-	// 	//std::cout << "date = " << date << " value = " << value <<std::endl;
-	// 	mp_input.insert(std::make_pair(date, value));
-	// }
-
-	MultimapInput mp_in("input.txt");
-
-	// std::istream_iterator<std::string> it_input(input_file);
-    // std::istream_iterator<std::string> end_input;
+	// MultimapInput("input.txt", mp_input);
+	// std::for_each(mp_input.begin(), mp_input.end(), Display());
 
 
-	//++it_input;
-	//std::for_each(it_input, end_input, fillMultimap_input(data_input));
+	std::ifstream input_file("input.txt");
 
-    std::multimap<std::string, float>::iterator itr2;
-
-	
-    for (itr2 = mp_in.get_mp_input().begin(); itr2 != mp_in.get_mp_input().end(); ++itr2)
+	std::string line;
+	std::getline(input_file, line);
+	while (std::getline(input_file, line))
 	{
-        std::cout << itr2->first << " => " << itr2->second << std::endl;
-    }
+		int indexVL = line.find(" | ");
+		float value;
+
+		
+		if (line.find(" | ") == std::string::npos || date_format_is_valid(line) == false || value_format_is_valid(line.substr(indexVL + 3, line.size())) == false)
+		{
+			std::cout << "Error: " << "bad input => " << line <<std::endl;
+		}
+		else
+		{
+			value = atof((line.substr(indexVL + 3, line.size())).c_str());
+			if (value < 0)
+			{
+				std::cout << "Error: " << "not a positive number." <<std::endl;
+			}
+			else if (value > 1000)
+			{
+				std::cout << "Error: " << "too large number." <<std::endl;
+			}
+			else
+			{
+				std::cout << line << " " << value << std::endl;
+				std::string date = line.substr(0, indexVL);
+				//std::cout << "date = [" << date << "]"<<std::endl;
+				for (std::multimap<std::string,float>::iterator start = mp_data.begin(); start != mp_data.end(); ++start)
+				{
+					if (date >= start->first)
+					{
+						std::cout << "J'ai trouve "<<std::endl;
+						break;
+					}
+				}
+
+			}
+
+
+		}
+
+
+	}
+
+	//value_format_is_valid("| 2");
 
     return 0;
 }

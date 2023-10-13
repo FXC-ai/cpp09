@@ -135,70 +135,6 @@ bool value_format_is_valid (std::string value)
 	return true;
 }
 
-class Date_tm
-{
-	public :
-		Date_tm(std::string str_date);
-		bool operator<(Date_tm &rhs);
-		tm get_tm_date();
-
-	private :
-		tm _tm_date;
-};
-
-tm Date_tm::get_tm_date()
-{
-	return this->_tm_date;
-};
-
-
-bool Date_tm::operator<(Date_tm &rhs)
-{
-	if (this->_tm_date.tm_year > rhs.get_tm_date().tm_year)
-	{
-		return false;
-	}
-
-	if (this->_tm_date.tm_mon < rhs.get_tm_date().tm_mon)
-	{
-		return true;
-	}
-
-	if (this->_tm_date.tm_year < rhs.get_tm_date().tm_year)
-	{
-		return true;
-	}
-	return false;
-};
-
-Date_tm::Date_tm(std::string str_date)
-{
-	std::istringstream str_f(str_date);
-	int n;
-	char c;
-
-	this->_tm_date.tm_sec = 0;
-	this->_tm_date.tm_min = 0;
-	this->_tm_date.tm_hour = 0;
-	this->_tm_date.tm_wday = 0;
-	this->_tm_date.tm_yday = 0;
-	this->_tm_date.tm_isdst = 0;
-
-	str_f >> n >> c;
-	this->_tm_date.tm_year = n;
-	str_f >> n >> c;
-	this->_tm_date.tm_mon = n;
-	str_f >> n >> c;
-	this->_tm_date.tm_mday = n;
-
-
-	// std::cout << this->_tm_date.tm_year << std::endl;
-	// std::cout << this->_tm_date.tm_mon << std::endl;
-	// std::cout << this->_tm_date.tm_mday << std::endl;
-
-}
-
-
 int main()
 {
 	// Date_tm("2022-12-29");
@@ -252,18 +188,29 @@ int main()
 			}
 			else
 			{
-				std::cout << line << " " << value << std::endl;
+				//std::cout << line << " " << value << " => ";
 				std::string date = line.substr(0, indexVL);
+				//std::multimap<std::string,float>::iterator start = mp_data.begin()
+
+
 				//std::cout << "date = [" << date << "]"<<std::endl;
 				for (std::multimap<std::string,float>::iterator start = mp_data.begin(); start != mp_data.end(); ++start)
 				{
-					if (date >= start->first)
+					if (date <= start->first)
 					{
-						std::cout << "J'ai trouve "<<std::endl;
+						//std::cout << "Je cherche "<< date;
+						start --;
+						//std::cout << " Je trouve : " << start->first <<std::endl;
+
+						float result = value * start->second;
+						std::cout << date << " => " << value << " = " << result << std::endl;
 						break;
 					}
 				}
-
+				// if (start == end)
+				// {
+				// 	std::cout << "La date est trop early." << std::cout;
+				// }
 			}
 
 

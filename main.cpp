@@ -6,7 +6,7 @@
 #include <map>
 #include <ctime>
 
-class Display
+class DisplayMultimap
 {
 	public:
 		template <typename T>
@@ -19,7 +19,7 @@ class Display
 class fillMultimap
 {
 	public:
-		fillMultimap(std::multimap<std::string, float> & mp) : _mp(mp) {}
+		fillMultimap(std::multimap<std::string, float> & mp_data) : _mp_data(mp_data) {}
 
 		void operator()(const std::string & data)
 		{
@@ -27,61 +27,12 @@ class fillMultimap
 			std::string date = data.substr(0, ind_coma);
 			std::string exchange_rate_str = data.substr(ind_coma + 1, data.size());
 			float exchange_rate = atof(exchange_rate_str.c_str());
-			this->_mp.insert(std::make_pair(date, exchange_rate));
+			this->_mp_data.insert(std::make_pair(date, exchange_rate));
 		}
 
 	private:
-		std::multimap<std::string, float> & _mp;
+		std::multimap<std::string, float> & _mp_data;
 };
-
-class MultimapInput
-{
-	public:
-		MultimapInput(const std::string fileName, std::multimap<std::string, float> & mp_input);
-
-	private:
-		const std::string _fileName;
-		std::multimap<std::string, float> & _mp_input;
-};
-
-MultimapInput::MultimapInput(const std::string fileName, std::multimap<std::string, float> & mp_input) : _fileName(fileName), _mp_input(mp_input)
-{
-	std::ifstream input_file(this->_fileName);
-
-	std::string temp;
-	std::getline(input_file, temp);
-	while (std::getline(input_file, temp))
-	{
-		int indexVL = temp.find(" | ");
-		float value = 0;
-		std::string date;
-		if (indexVL == 10)
-		{
-			date = temp.substr(0, indexVL);
-			value = atof((temp.substr(indexVL + 3, temp.size())).c_str());
-			this->_mp_input.insert(std::make_pair(date, value));
-		}
-		else
-		{
-			date = temp;
-			this->_mp_input.insert(std::make_pair(date, value));
-		}
-	}
-
-};
-
-// class BitcoinExchange
-// {
-// 	public :
-
-
-// 	private :
-//     	std::multimap<std::string, float> mp_data;
-// 		std::multimap<std::string, float> mp_input;
-
-
-
-// }
 
 bool date_format_is_valid(std::string date)
 {
@@ -127,7 +78,6 @@ bool value_format_is_valid (std::string value)
 	{
 		if ((c < '0' || c > '9') && c != '.')
 		{
-			//std::cout << "ba non la c est pas un float mec (" << c << ')' <<std::endl;
 			return false;
 		}
 		str_f >> c;
@@ -135,91 +85,127 @@ bool value_format_is_valid (std::string value)
 	return true;
 }
 
-int main()
+std::string extract_date (std::string line)
 {
-	// Date_tm("2022-12-29");
-	// std::string date1 = "2021-02-31";
-	// std::string date2 = "2021-01-20";
+	int indexVL = line.find(" | ");
+	return line.substr(0, indexVL + 2);
+}
 
-	// std::cout << "T1 =" << (date1 < date2) << std::endl;
-	// std::cout << "T2 =" << (date2 < date1) << std::endl;
+std::string extract_value (std::string line)
+{
+	int indexVL = line.find(" | ");
+	return line.substr(indexVL + 3, line.size());
+}
 
-    std::ifstream csv_file("data.csv");
-    std::istream_iterator<std::string> it(csv_file);
-    std::istream_iterator<std::string> end;
-    std::multimap<std::string, float> mp_data;
-    
-	++it;
+float calculate_bc_value (std::multimap<std::string,float> mp_data, const std::string input_date, const float input_value)
+{
+	std::multimap<std::string,float>::iterator it_data = mp_data.begin();
+	std::multimap<std::string,float>::iterator it_data_end = mp_data.end();
 
-    std::for_each(it, end, fillMultimap(mp_data));
+	while (it_data != it_data_end && input_date >= it_data->first)
+		++it_data;
 
+	if (it_data == mp_data.begin())
+		return input_value * it_data->second;
+	
+	it_data--;
+	return input_value * it_data->second;
+}
 
-	// std::for_each(mp_data.begin(), mp_data.end(), Display());
+class BitcoinExchange
+{
+	public :
+		BitcoinExchange(const std::string datas_file);
+		std::multimap<std::string, float> & get_mp_data();
+		void calculate(const std::string input_file);
+		void display();
 
-	// std::multimap<std::string, float> mp_input;
-	// MultimapInput("input.txt", mp_input);
-	// std::for_each(mp_input.begin(), mp_input.end(), Display());
+	private :
+    	std::multimap<std::string, float> _mp_data;
+    	std::multimap<int, std::string> output;
+		//float calculate_bc_value(const std::string input_date, const float input_value);
 
+};
 
-	std::ifstream input_file("input.txt");
+BitcoinExchange::BitcoinExchange (const std::string datas_file)
+{
+    std::ifstream csv_file(datas_file);
+    std::istream_iterator<std::string> it_csv(csv_file);
+    std::istream_iterator<std::string> it_csv_end;
+
+	++it_csv;
+
+    std::for_each(it_csv, it_csv_end, fillMultimap(this->_mp_data));
+};
+
+std::multimap<std::string, float> & BitcoinExchange::get_mp_data()
+{
+	return this->_mp_data;
+}
+
+void BitcoinExchange::calculate(const std::string input_file)
+{
+	std::ifstream input(input_file);
 
 	std::string line;
-	std::getline(input_file, line);
-	while (std::getline(input_file, line))
-	{
-		int indexVL = line.find(" | ");
-		float value;
+	std::getline(input, line);
 
-		
-		if (line.find(" | ") == std::string::npos || date_format_is_valid(line) == false || value_format_is_valid(line.substr(indexVL + 3, line.size())) == false)
+
+	int line_count;
+
+	line_count = 0;
+	while (std::getline(input, line))
+	{
+		if (line.find(" | ") == std::string::npos || date_format_is_valid(extract_date(line)) == false || value_format_is_valid(extract_value(line)) == false)
 		{
-			std::cout << "Error: " << "bad input => " << line <<std::endl;
+			this->output.insert(std::make_pair(line_count, ("Error: bad input => " + line)));
 		}
 		else
 		{
-			value = atof((line.substr(indexVL + 3, line.size())).c_str());
+			float value = atof(extract_value(line).c_str());
+			std::string date = extract_date(line);
 			if (value < 0)
 			{
-				std::cout << "Error: " << "not a positive number." <<std::endl;
+				this->output.insert(std::make_pair(line_count, "Error: not a positive number."));
+
 			}
 			else if (value > 1000)
 			{
-				std::cout << "Error: " << "too large number." <<std::endl;
+				this->output.insert(std::make_pair(line_count, "Error: too large number."));
 			}
 			else
 			{
-				//std::cout << line << " " << value << " => ";
-				std::string date = line.substr(0, indexVL);
-				//std::multimap<std::string,float>::iterator start = mp_data.begin()
-
-
-				//std::cout << "date = [" << date << "]"<<std::endl;
-				for (std::multimap<std::string,float>::iterator start = mp_data.begin(); start != mp_data.end(); ++start)
-				{
-					if (date <= start->first)
-					{
-						//std::cout << "Je cherche "<< date;
-						start --;
-						//std::cout << " Je trouve : " << start->first <<std::endl;
-
-						float result = value * start->second;
-						std::cout << date << " => " << value << " = " << result << std::endl;
-						break;
-					}
-				}
-				// if (start == end)
-				// {
-				// 	std::cout << "La date est trop early." << std::cout;
-				// }
+				std::ostringstream oss;
+				oss << date << " => " << value << " = " << calculate_bc_value(this->_mp_data, date, value);
+				this->output.insert(std::make_pair(line_count, oss.str()));
 			}
-
-
 		}
-
-
+		line_count++;
 	}
 
-	//value_format_is_valid("| 2");
+};
+
+void BitcoinExchange::display()
+{
+	std::for_each(this->output.begin(), this->output.end(), DisplayMultimap());
+}
+
+
+
+
+int main()
+{
+
+	BitcoinExchange bitcoin_exchange0("data.csv");
+	
+	//std::for_each(bitcoin_exchange0.get_mp_data().begin(), bitcoin_exchange0.get_mp_data().end(), Display() );
+
+
+	// Research and calculate values
+
+	bitcoin_exchange0.calculate("input.txt");
+	bitcoin_exchange0.display();
+
 
     return 0;
 }

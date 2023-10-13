@@ -5,7 +5,24 @@
 #include <stack>
 #include <filesystem>
 
-void RPN (std::string str)
+
+// class RPN
+// {
+// 	public :
+// 		RPN(const std::string str);
+// 		void process();
+
+// 	private :
+// 		const std::string _str;
+// 		std::stack<long> stack_process;
+// };
+
+
+// RPN::RPN(const std::string str) : _str(str) {};
+
+
+
+void process (std::string str)
 {
 
 	std::stack<long> stack_process;
@@ -23,6 +40,10 @@ void RPN (std::string str)
 		switch (c)
 		{
 			case 43 :
+				if (stack_process.size() <= 1)
+				{
+					throw std::exception();
+				}
 				op0 = stack_process.top();
 				stack_process.pop();
 				op1 = stack_process.top();
@@ -30,6 +51,10 @@ void RPN (std::string str)
 				stack_process.push((op1 + op0));
 				break;
 			case 45 :
+				if (stack_process.size() <= 1)
+				{
+					throw std::exception();
+				}
 				op0 = stack_process.top();
 				stack_process.pop();
 				op1 = stack_process.top();
@@ -37,6 +62,10 @@ void RPN (std::string str)
 				stack_process.push((op1 - op0));
 				break;
 			case 42 :
+				if (stack_process.size() <= 1)
+				{
+					throw std::exception();
+				}
 				op0 = stack_process.top();
 				stack_process.pop();
 				op1 = stack_process.top();
@@ -44,6 +73,10 @@ void RPN (std::string str)
 				stack_process.push((op1 * op0));
 				break;
 			case 47 :
+				if (stack_process.size() <= 1)
+				{
+					throw std::exception();
+				}
 				op0 = stack_process.top();
 				stack_process.pop();
 				op1 = stack_process.top();
@@ -69,11 +102,13 @@ void RPN (std::string str)
 	}
 	else
 	{
+		std::cout << "Stack is not empty : ";
 		while (stack_process.empty() == false)
 		{
-			std::cout << static_cast<char> (stack_process.top())<< " : " << stack_process.top() << std::endl;
+			std::cout << stack_process.top() << " ";
 			stack_process.pop();
 		}
+		std::cout << std::endl;
 	}
 };
 
@@ -109,7 +144,7 @@ int main(int argc, char* argv[])
 	// std::cout << std::endl;
 	try
 	{
-		RPN(argv[1]);
+		process(argv[1]);
 		
 	}
 	catch(const std::exception& e)

@@ -150,113 +150,42 @@ void PmergeMe::insertion_sort_pairs ()
 
 	for (unsigned long index = 1;index < S.size(); ++index)
 	{
-		std::cout << "index = " << index << std::endl;
-		for_each(S.begin(), S.end(), DisplayList());
-		std::cout << std::endl;
+		//std::cout << "index = " << index << std::endl;
+		//for_each(S.begin(), S.end(), DisplayList());
+		//std::cout << std::endl;
 
 		std::list<unsigned int>::iterator start = S.begin();
 		std::list<unsigned int>::iterator it_current = this->get_element_in_list(index, S);
 		std::list<unsigned int>::iterator it_mover = this->get_element_in_list(index - 1, S);
 
 
-
-
 		while (*it_current < *it_mover && it_mover != start)
 		{
-			std::cout << "it_mover = " << *it_mover << std::endl;
+			//std::cout << "it_mover = " << *it_mover << std::endl;
 			--it_mover;
 		}
 	
 		if (index == 1 && *it_current < *it_mover )
 		{
 			this->switch_it(it_mover, it_current);
-			std::cout << "CAS 1" <<std::endl;
+			//std::cout << "CAS 1" <<std::endl;
 
 		}
 		else if (it_mover == start && *it_current < *start)
 		{
 			S.push_front(*it_current);
 			S.erase(it_current);
-			std::cout << "CAS 2" <<std::endl;
+			//std::cout << "CAS 2" <<std::endl;
 
 		}
 		else
 		{
 			S.insert(++it_mover, *it_current);
 			S.erase(it_current);
-			std::cout << "CAS 3" <<std::endl;
+			//std::cout << "CAS 3" <<std::endl;
 		}
 
-		//std::cout << *it_mover << " est superieur a " << *it_current << std::endl;
 
-
-		//std::cout << "il faut reculer " << *it_current << " de " << ind_to_insert << " places." << " cad avant "<< *it_mover <<std::endl;
-
-
-		// std::cout << index << " : " << " current value = " << *it_current << std::endl;
-
-		// unsigned int temp_value;
-		// temp_value = *it_current;
-		// --it_current;
-
-		// unsigned long ind_to_insert = 0;
-
-		// std::cout << "Ici on compare " << temp_value << " avec " << *it_current <<std::endl;
-		// while (temp_value < *it_current && it_current != start)
-		// {
-		// 	ind_to_insert++;
-		// 	--it_current;
-		// }
-
-		// std::list<unsigned int>::iterator it_to_insert = this->get_element_in_list(index - ind_to_insert, S);
-		
-		// std::cout << "il faut reculer " << temp_value << " de " << ind_to_insert << " places." << " cad avant "<< *it_to_insert <<std::endl;
-
-		// if (ind_to_insert != 0)
-		// {
-		// 	//break;
-		// 	//it_to_insert--;
-		// 	if (it_to_insert == start)
-		// 	{
-		// 		S.erase(this->get_element_in_list(index, S));
-		// 		S.push_front(temp_value);
-		// 	}
-		// 	else
-		// 	{
-		// 		S.erase(this->get_element_in_list(index, S));
-		// 		S.insert(it_to_insert, temp_value);
-		// 	}
-
-		// 	//S.insert(it_to_insert, temp_value);
-		// 	std::cout << std::endl;
-		// 	for_each(S.begin(), S.end(), DisplayList());
-		// 	std::cout << std::endl;
-
-		// }
-		// while (start != it_current)
-		// {
-		// 	--it_current;
-
-		// 	std::cout << "Analyse de " << temp_value << " et " << *it_current << " : " << std::endl;
-		// 	if (temp_value > *it_current)
-		// 	{
-		// 		std::cout << "index = " << index << std::endl;
-		// 		std::cout << "ind_to_insert = " << ind_to_insert << std::endl;
-
-		// 		std::list<unsigned int>::iterator it_to_insert = this->get_element_in_list((index - ind_to_insert -1), S);
-
-		// 		std::cout << "Je veux switch " << *it_to_insert << " " << *it_current <<std::endl;
-		// 		std::cout << std::endl;
-
-
-		// 		break;
-		// 	}
-		// 	else
-		// 	{
-		// 		std::cout << "La faut insert..." <<std::endl;
-		// 		ind_to_insert++;
-		// 	}
-		// }
 	}
 
 
@@ -266,23 +195,23 @@ void PmergeMe::insertion_sort_pairs ()
 
 
 	//DEBUG
-	int d = 0;
-	std::cout << std::endl;
-	std::cout << "After insertion_sort_pairs :" << std::endl;
-	for (std::list<unsigned int>::iterator it = this->_list_to_sort.begin(); it != this->_list_to_sort.end(); ++it)
-	{
-		std::cout << *it;
-		if (d % 2 == 1)
-		{
-			std::cout << " | ";
-		}
-		else
-		{
-			std::cout << "-";
-		}
-		d++;
-	}
-	std::cout << std::endl;
+	// int d = 0;
+	// std::cout << std::endl;
+	// std::cout << "After insertion_sort_pairs :" << std::endl;
+	// for (std::list<unsigned int>::iterator it = this->_list_to_sort.begin(); it != this->_list_to_sort.end(); ++it)
+	// {
+	// 	std::cout << *it;
+	// 	if (d % 2 == 1)
+	// 	{
+	// 		std::cout << " | ";
+	// 	}
+	// 	else
+	// 	{
+	// 		std::cout << "-";
+	// 	}
+	// 	d++;
+	// }
+	// std::cout << std::endl;
 
 }
 

@@ -157,25 +157,21 @@ void PmergeMe::insertion_sort_pairs ()
 		std::list<unsigned int>::iterator start = S.begin();
 		std::list<unsigned int>::iterator it_current = this->get_element_in_list(index, S);
 		std::list<unsigned int>::iterator it_mover = this->get_element_in_list(index - 1, S);
-		unsigned long ind_to_insert = 0;
+		//unsigned long ind_to_insert = 0;
 
 		std::cout << "Ici on compare le current " << *it_current << " avec le mover " << *it_mover <<std::endl;
-		while (*it_current < *it_mover)
+		while (*it_current < *it_mover && it_mover != start)
 		{
-			ind_to_insert++;
+			//ind_to_insert++;
 
-			if (it_mover != start)
-			{
-				--it_mover;
-			}
-			else
-			{
-				break;
-			}
+			--it_mover;
+
 		}
 	
+		std::cout << *it_mover << " est inferieur a " << *it_current << std::endl;
 
-		std::cout << "il faut reculer " << *it_current << " de " << ind_to_insert << " places." << " cad avant "<< *it_mover <<std::endl;
+
+		//std::cout << "il faut reculer " << *it_current << " de " << ind_to_insert << " places." << " cad avant "<< *it_mover <<std::endl;
 
 
 		// std::cout << index << " : " << " current value = " << *it_current << std::endl;

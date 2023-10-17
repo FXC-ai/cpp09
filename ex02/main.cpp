@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include "Acess_list.hpp"
 
 class DisplayList
 {
@@ -9,7 +10,6 @@ class DisplayList
 		{
 			std::cout << a << " ";
 		}
-
 };
 
 template <typename T>
@@ -28,6 +28,7 @@ void swap_in_list(std::list<unsigned int>::iterator & it, std::list<unsigned int
 };
 
 
+
 class PmergeMe
 {
 	public :
@@ -38,11 +39,8 @@ class PmergeMe
 		void sort_pairs();
 		void insertion_sort_pairs ();
 
-
 	private :
 		std::list<unsigned int>_list_to_sort;
-
-
 };
 
 
@@ -71,7 +69,6 @@ void PmergeMe::sort_pairs()
 		std::cout << "it = " << *it << " it_2 = " << *it_2 <<std::endl;
 		if (*it_2 < *it)
 		{	
-
 			temp = *it;
 			*it = *it_2;
 			*it_2 = temp;
@@ -85,7 +82,6 @@ void PmergeMe::sort_pairs()
 
 void PmergeMe::insertion_sort_pairs ()
 {
-
 	// std::list<unsigned int>::interator start = this->_list_to_sort.begin();
 
 	std::list<unsigned int>::iterator it = this->_list_to_sort.begin();
@@ -113,8 +109,6 @@ void PmergeMe::insertion_sort_pairs ()
 	}
 
 	for_each(S.begin(), S.end(), DisplayList());
-
-
 
 	// while (it_2 != this->_list_to_sort.end())
 	// {

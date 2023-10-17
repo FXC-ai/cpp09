@@ -150,25 +150,44 @@ void PmergeMe::insertion_sort_pairs ()
 
 	for (unsigned long index = 1;index < S.size(); ++index)
 	{
-		std::cout << std::endl;
+		std::cout << "index = " << index << std::endl;
 		for_each(S.begin(), S.end(), DisplayList());
 		std::cout << std::endl;
 
 		std::list<unsigned int>::iterator start = S.begin();
 		std::list<unsigned int>::iterator it_current = this->get_element_in_list(index, S);
 		std::list<unsigned int>::iterator it_mover = this->get_element_in_list(index - 1, S);
-		//unsigned long ind_to_insert = 0;
 
-		std::cout << "Ici on compare le current " << *it_current << " avec le mover " << *it_mover <<std::endl;
+
+
+
 		while (*it_current < *it_mover && it_mover != start)
 		{
-			//ind_to_insert++;
-
+			std::cout << "it_mover = " << *it_mover << std::endl;
 			--it_mover;
-
 		}
 	
-		std::cout << *it_mover << " est inferieur a " << *it_current << std::endl;
+		if (index == 1 && *it_current < *it_mover )
+		{
+			this->switch_it(it_mover, it_current);
+			std::cout << "CAS 1" <<std::endl;
+
+		}
+		else if (it_mover == start && *it_current < *start)
+		{
+			S.push_front(*it_current);
+			S.erase(it_current);
+			std::cout << "CAS 2" <<std::endl;
+
+		}
+		else
+		{
+			S.insert(++it_mover, *it_current);
+			S.erase(it_current);
+			std::cout << "CAS 3" <<std::endl;
+		}
+
+		//std::cout << *it_mover << " est superieur a " << *it_current << std::endl;
 
 
 		//std::cout << "il faut reculer " << *it_current << " de " << ind_to_insert << " places." << " cad avant "<< *it_mover <<std::endl;

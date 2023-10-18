@@ -33,15 +33,27 @@ class PmergeMe
 	public :
 		PmergeMe(std::list<unsigned int>list_to_sort);
 		std::list<unsigned int> get_list_to_sort();
+		std::list<unsigned int> get_jacobsthal();
 		void DisplayListToSort();
+		void DisplayJacobsthal();
 
 		void sort_pairs();
 		void insertion_sort_pairs ();
 
+		void jacobsthal_generator ();
+		std::list<unsigned int> index_order_generator ();
+
+
 	private :
-		std::list<unsigned int>_list_to_sort;
+		std::list<unsigned int> _list_to_sort;
+		std::list<unsigned int> _jacobsthal;
+		std::list<unsigned int> _S;
+		std::list<unsigned int> _pend;
+
+
 		void switch_it(std::list<unsigned int>::iterator & it, std::list<unsigned int>::iterator & it_2);
 		std::list<unsigned int>::iterator get_element_in_list(unsigned long ind, std::list<unsigned int> & list);
+
 
 };
 
@@ -67,7 +79,6 @@ std::list<unsigned int>::iterator PmergeMe::get_element_in_list(unsigned long in
 	return it;
 }
 
-
 PmergeMe::PmergeMe(std::list<unsigned int>list_to_sort) : _list_to_sort(list_to_sort){};
 
 std::list<unsigned int> PmergeMe::get_list_to_sort()
@@ -75,10 +86,21 @@ std::list<unsigned int> PmergeMe::get_list_to_sort()
 	return this->_list_to_sort;
 }
 
+std::list<unsigned int> PmergeMe::get_jacobsthal()
+{
+	return this->_jacobsthal;
+}
+
 void PmergeMe::DisplayListToSort()
 {
 	for_each(this->_list_to_sort.begin(), this->_list_to_sort.end(), DisplayList());
 }
+
+void PmergeMe::DisplayJacobsthal()
+{
+	for_each(this->_jacobsthal.begin(), this->_jacobsthal.end(), DisplayList());
+}
+
 
 void PmergeMe::sort_pairs()
 {
@@ -86,10 +108,7 @@ void PmergeMe::sort_pairs()
 	std::list<unsigned int>::iterator it_2 = this->_list_to_sort.begin();
 
 	unsigned long loop_count = this->_list_to_sort.size() / 2;
-
-	//unsigned int temp;
 	it_2++;
-	// FONCTIONNE PAS QUAND IL Y A UN NBR IMPAIR DE VALEURS !!!!!!
 
 	while (loop_count > 0)
 	{	
@@ -126,92 +145,165 @@ void PmergeMe::sort_pairs()
 
 void PmergeMe::insertion_sort_pairs ()
 {
-	// std::list<unsigned int>::interator start = this->_list_to_sort.begin();
-
 	std::list<unsigned int>::iterator it = this->_list_to_sort.begin();
 	
-
-	// creer un liste S avec les plus grands nombres de chaque paire.
-	// analyser chaque nombre au sein de cette liste S
-	// inserer les paires en conséquence dans la liste initiale
-
-
-	std::list<unsigned int> S;
-
 	for (unsigned long i = 0; i < this->_list_to_sort.size(); ++i)
 	{
 		if (i%2 == 1)
 		{
-			S.push_back(*it);
+			this->_S.push_back(*it);
+		}
+		else
+		{
+			this->_pend.push_back(*it);
 		}
 		++it;
 	}
 
-
-	for (unsigned long index = 1;index < S.size(); ++index)
+	for (unsigned long index = 1;index < this->_S.size(); ++index)
 	{
-		//std::cout << "index = " << index << std::endl;
-		//for_each(S.begin(), S.end(), DisplayList());
-		//std::cout << std::endl;
+		std::list<unsigned int>::iterator start = this->_S.begin();
+		std::list<unsigned int>::iterator it_current = this->get_element_in_list(index, this->_S);
+		std::list<unsigned int>::iterator it_mover = this->get_element_in_list(index - 1, this->_S);
 
-		std::list<unsigned int>::iterator start = S.begin();
-		std::list<unsigned int>::iterator it_current = this->get_element_in_list(index, S);
-		std::list<unsigned int>::iterator it_mover = this->get_element_in_list(index - 1, S);
-
+		std::list<unsigned int>::iterator it_current_p = this->get_element_in_list(index, this->_pend);
+		std::list<unsigned int>::iterator it_mover_p = this->get_element_in_list(index - 1, this->_pend);
 
 		while (*it_current < *it_mover && it_mover != start)
 		{
-			//std::cout << "it_mover = " << *it_mover << std::endl;
+			--it_mover_p;
 			--it_mover;
 		}
-	
+
 		if (index == 1 && *it_current < *it_mover )
 		{
+			this->switch_it(it_mover_p, it_current_p);
 			this->switch_it(it_mover, it_current);
-			//std::cout << "CAS 1" <<std::endl;
-
 		}
 		else if (it_mover == start && *it_current < *start)
 		{
-			S.push_front(*it_current);
-			S.erase(it_current);
-			//std::cout << "CAS 2" <<std::endl;
-
+			this->_pend.push_front(*it_current_p);
+			this->_pend.erase(it_current_p);
+			this->_S.push_front(*it_current);
+			this->_S.erase(it_current);
 		}
 		else
 		{
-			S.insert(++it_mover, *it_current);
-			S.erase(it_current);
-			//std::cout << "CAS 3" <<std::endl;
+			this->_pend.insert(++it_mover_p, *it_current_p);
+			this->_pend.erase(it_current_p);
+			this->_S.insert(++it_mover, *it_current);
+			this->_S.erase(it_current);
+		}
+	}
+
+	//Display for debug
+	std::cout << "After insertion_sort_pairs" <<std::endl;
+
+	std::list<unsigned int>::iterator pend_it = this->_pend.begin();
+	for (std::list<unsigned int>::iterator it = this->_S.begin(); it != this->_S.end(); ++it)
+	{
+		std::cout << *pend_it << "-" << *it << " | ";
+		++pend_it;
+
+	}
+	if (this->_pend.size() % 2 == 1)
+	{
+		++pend_it;
+		std::cout << *pend_it;
+	}
+
+	std::cout << std::endl;
+
+}
+
+class SumList
+{
+	public :
+		SumList() : _sum_list(0){};
+		unsigned long long get_sum_list()
+		{
+			return this->_sum_list;
 		}
 
+		void operator()(unsigned int a)
+		{
+			this->_sum_list += a;
+		}
 
+	private :
+		unsigned long long _sum_list;
+
+};
+
+
+void PmergeMe::jacobsthal_generator ()
+{
+	this->_jacobsthal.clear();
+	this->_jacobsthal.push_back(0);
+	this->_jacobsthal.push_back(1);
+	this->_jacobsthal.push_back(1);
+
+	SumList sum = for_each(this->_jacobsthal.begin(), this->_jacobsthal.end(), SumList());
+
+
+	unsigned long i;
+
+	i = 2;
+
+	while ((sum.get_sum_list()*2) <= this->_list_to_sort.size())
+	{
+		std::list<unsigned int>::iterator Jn_2 = this->get_element_in_list(i - 1, this->_jacobsthal); 
+		std::list<unsigned int>::iterator Jn_1 = this->get_element_in_list(i, this->_jacobsthal); 
+
+		unsigned int r = *Jn_1 + (2 * (*Jn_2));
+
+		this->_jacobsthal.push_back(r);
+
+		sum = for_each(this->_jacobsthal.begin(), this->_jacobsthal.end(), SumList());
+
+		++i;
+	}
+
+	for (std::list<unsigned int>::iterator it = this->_jacobsthal.begin(); it != this->_jacobsthal.end(); ++it)
+	{
+		(*it) *= 2;
 	}
 
 
-	std::cout << std::endl;
-	for_each(S.begin(), S.end(), DisplayList());
-	std::cout << std::endl;
+	//for_each(this->_jacobsthal.begin(), this->_jacobsthal.end(), DisplayList());
+
+}
+
+std::list<unsigned int> PmergeMe::index_order_generator ()
+{
+	std::list<unsigned int> index_order;
+
+	unsigned long pend_size;
+
+	pend_size = this->_list_to_sort.size();
+	unsigned long index = 1;
+
+	while (pend_size > 0)
+	{
+
+		std::list<unsigned int>::iterator j_it = this->get_element_in_list(index, this->_jacobsthal);
+
+		while (*j_it > 0)
+		{
+			index_order.push_back(index + *j_it);
+			*j_it--;
+			
+		}
 
 
-	//DEBUG
-	// int d = 0;
-	// std::cout << std::endl;
-	// std::cout << "After insertion_sort_pairs :" << std::endl;
-	// for (std::list<unsigned int>::iterator it = this->_list_to_sort.begin(); it != this->_list_to_sort.end(); ++it)
-	// {
-	// 	std::cout << *it;
-	// 	if (d % 2 == 1)
-	// 	{
-	// 		std::cout << " | ";
-	// 	}
-	// 	else
-	// 	{
-	// 		std::cout << "-";
-	// 	}
-	// 	d++;
-	// }
-	// std::cout << std::endl;
+		index++;
+		pend_size--;
+	}
+
+
+	for_each(index_order.begin(), index_order.end(), DisplayList());
+
+	return index_order;
 
 }
 
@@ -258,10 +350,20 @@ int main(int argc, char* argv[])
 	pmm.DisplayListToSort();
 
 
+	std::cout << std::endl;
+
+	pmm.jacobsthal_generator();
+
+	pmm.DisplayJacobsthal();
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+	pmm.index_order_generator();
 	//pmm.insertion_sort_pairs();
 
-
-
+	//for_each(pmm.get_jacobsthal().begin(), pmm.get_jacobsthal().end(), DisplayList());
+	//std::cout << " SIZE = "<< pmm.get_jacobsthal().size() << std::endl;
+	//std::cout << " o = "<< *(pmm.get_jacobsthal().begin()) << std::endl;
 
 	return 0;
 }

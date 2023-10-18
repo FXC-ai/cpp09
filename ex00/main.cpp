@@ -15,15 +15,20 @@ int main(int argc, char* argv[])
 	if (file)
 	{
 		file.close();
-		BitcoinExchange bitcoin_exchange0("data.csv");
-		bitcoin_exchange0.calculate(argv[1]);
-		bitcoin_exchange0.display();
-		
+		try
+		{
+			BitcoinExchange bitcoin_exchange0("data.csv");
+			bitcoin_exchange0.calculate(argv[1]);
+			bitcoin_exchange0.display();
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
 	}
 	else
 	{
 		std::cerr << "Error: could not open file." <<std::endl;
-
 	}
     return 0;
 }

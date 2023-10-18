@@ -1,5 +1,5 @@
 #include "BitcoinExchange.hpp"
-
+#include <typeinfo>
 class DisplayMultimap
 {
 	public:
@@ -10,22 +10,37 @@ class DisplayMultimap
 		}
 };
 
-class fillMultimap
+BitcoinExchange::BitcoinExchange (const std::string datas_file)
 {
-	public:
-		fillMultimap(std::multimap<std::string, float> & mp_data) : _mp_data(mp_data) {}
+    std::ifstream csv_file(datas_file);
+    std::istream_iterator<std::string> it_csv(csv_file);
+    std::istream_iterator<std::string> it_csv_end;
 
-		void operator()(const std::string & data)
+	++it_csv;
+	while (it_csv != it_csv_end)
+	{	
+		int ind_coma = (*it_csv).find(',');
+		if (ind_coma == -1)
 		{
-			int ind_coma = data.find(',');
-			std::string date = data.substr(0, ind_coma);
-			std::string exchange_rate_str = data.substr(ind_coma + 1, data.size());
-			float exchange_rate = atof(exchange_rate_str.c_str());
-			this->_mp_data.insert(std::make_pair(date, exchange_rate));
+			std::cout << "Error : " << (*it_csv) << std::endl;
+			throw IssueWithDatas();
 		}
+		std::string date = (*it_csv).substr(0, ind_coma);
 
-	private:
-		std::multimap<std::string, float> & _mp_data;
+		std::cout << date <<std::endl;
+		// if (this->date_format_is_valid(date, ',') == false)
+		// {
+		// 	std::cout << "Error : " << (*it_csv) << " (" << date << ")"<<std::endl;
+		// 	throw IssueWithDatas();
+		// }
+		std::string exchange_rate_str = (*it_csv).substr(ind_coma + 1, (*it_csv).size());
+		float exchange_rate = atof(exchange_rate_str.c_str());
+		this->_mp_data.insert(std::make_pair(date, exchange_rate));	
+		++it_csv;
+	}
+
+
+    //std::for_each(it_csv, it_csv_end, fillMultimap(this->_mp_data));
 };
 
 bool BitcoinExchange::value_format_is_valid (std::string value)
@@ -50,31 +65,37 @@ bool BitcoinExchange::value_format_is_valid (std::string value)
 	return true;
 }
 
-bool BitcoinExchange::date_format_is_valid(std::string date)
+bool BitcoinExchange::date_format_is_valid(std::string date, const char sep)
 {
 	std::istringstream str_f(date);
 	int n;
 	char c;
 
 	str_f >> n >> c;
+	std::cout << "n = " << n << " c = " << c << std::endl;
 	if ((n < 1900 || n > 9999) || (c != '-'))
 	{
+		//std::cout << "VERIF3";
+
 		return false;
 	}
 	
 	str_f >> n >> c;
+	std::cout << "n = " << n << " c = " << c << std::endl;
 	if ((n < 1 || n > 12) || (c != '-'))
 	{
+		//std::cout << "VERIF2";
+
 		return false;
 	}
-	//std::cout << "n = " << n << " c = " << c << std::endl;
 
 	str_f >> n >> c;
-	if ((n < 1 || n > 31) || (c != '|'))
+	std::cout << "n = " << n << " c = " << c << std::endl;
+	if ((n < 1 || n > 31) || (c != sep))
 	{
+		//std::cout << "VERIF";
 		return false;
 	}	
-	//std::cout << "n = " << n << " c = " << c << std::endl;
 
 	return true;
 }
@@ -106,17 +127,6 @@ float BitcoinExchange::calculate_bc_value (const std::string input_date, const f
 	return input_value * it_data->second;
 }
 
-BitcoinExchange::BitcoinExchange (const std::string datas_file)
-{
-    std::ifstream csv_file(datas_file);
-    std::istream_iterator<std::string> it_csv(csv_file);
-    std::istream_iterator<std::string> it_csv_end;
-
-	++it_csv;
-
-    std::for_each(it_csv, it_csv_end, fillMultimap(this->_mp_data));
-};
-
 std::multimap<std::string, float> & BitcoinExchange::get_mp_data()
 {
 	return this->_mp_data;
@@ -135,7 +145,7 @@ void BitcoinExchange::calculate(const std::string input_file)
 	line_count = 0;
 	while (std::getline(input, line))
 	{
-		if (line.find(" | ") == std::string::npos || this->date_format_is_valid(this->extract_date(line)) == false || this->value_format_is_valid(this->extract_value(line)) == false)
+		if (line.find(" | ") == std::string::npos || this->date_format_is_valid(this->extract_date(line), '|') == false || this->value_format_is_valid(this->extract_value(line)) == false)
 		{
 			this->output.insert(std::make_pair(line_count, ("Error: bad input => " + line)));
 		}

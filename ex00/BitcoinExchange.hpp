@@ -11,8 +11,13 @@
 class BitcoinExchange
 {
 	public :
+		BitcoinExchange();
 		BitcoinExchange(const std::string datas_file);
-		std::multimap<std::string, float> & get_mp_data();
+		BitcoinExchange(const BitcoinExchange & src);
+		BitcoinExchange & operator=(const BitcoinExchange & rhs);
+
+		std::multimap<std::string, float> get_mp_data() const;
+		std::multimap<int, std::string> get_output() const;
 		void calculate(const std::string input_file);
 		void display();
 
@@ -20,19 +25,28 @@ class BitcoinExchange
 		{
 			virtual const char* what() const throw()
 			{
-				return "Error : incorrect value in data dase.";
+				return "Error : incorrect CSV file.";
 			}
 		};
 
+	class DisplayMultimap
+	{
+		public:
+			template <typename T>
+			void operator()(T & a)
+			{
+				std::cout << a.first << " => " << a.second << std::endl;
+			}
+	};
 
 	private :
     	std::multimap<std::string, float> _mp_data;
-    	std::multimap<int, std::string> output;
+    	std::multimap<int, std::string> _output;
 
-		bool value_format_is_valid (std::string value);
-		bool date_format_is_valid(std::string date, const char sep);
 		std::string extract_date (std::string line);
 		std::string extract_value (std::string line);
+		bool date_format_is_valid(std::string date);
+		bool value_format_is_valid (std::string value);
 
 		float calculate_bc_value(const std::string input_date, const float input_value);
 

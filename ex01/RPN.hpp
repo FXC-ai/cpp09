@@ -15,12 +15,14 @@ class RPN
 		RPN();
 		RPN(const std::string str);
 		RPN(const RPN &src);
-		void process();
-		void display();
+		RPN & operator=(const RPN & rhs);
+		~RPN();
+
 		const std::string get_str() const;
 		std::stack<long> get_process_stack() const;
-		RPN & operator=(const RPN & rhs);
 
+		void process();
+		void display();
 
 		class DivisionByZero : public std::exception
 		{
@@ -34,7 +36,7 @@ class RPN
 		{
 			virtual const char* what() const throw()
 			{
-				return "Error : INT_MAX exceeded.";
+				return "Error : INT capacity exceeded.";
 			}
 		};
 
@@ -42,7 +44,7 @@ class RPN
 		{
 			virtual const char* what() const throw()
 			{
-				return "Error : not a digit.";
+				return "Error";
 			}
 		};
 
@@ -59,10 +61,9 @@ class RPN
 		std::stack<long> _stack_process;
 		void process_add();
 		void process_min();
-		void process_div();
 		void process_mul();
+		void process_div();
 		void process_push(const char c);
 };
-
 
 #endif

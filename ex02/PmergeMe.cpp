@@ -35,29 +35,29 @@ std::list<unsigned int> PmergeMe::get_list_to_sort()
 	return this->_list_to_sort;
 }
 
+std::list<unsigned int> PmergeMe::get_list_sorted_pairs()
+{
+	return this->_list_sorted_pairs;
+}
+
+std::list<unsigned int> PmergeMe::get_S()
+{
+	return this->_S;
+}
+
+std::list<unsigned int> PmergeMe::get_pend()
+{
+	return this->_pend;
+}
+
 std::list<unsigned int> PmergeMe::get_jacobsthal()
 {
 	return this->_jacobsthal;
 }
 
-void PmergeMe::DisplayListToSort()
+void PmergeMe::diplayList(std::list<unsigned int> list_to_display)
 {
-	for_each(this->_list_to_sort.begin(), this->_list_to_sort.end(), DisplayList());
-}
-
-void PmergeMe::DisplayJacobsthal()
-{
-	for_each(this->_jacobsthal.begin(), this->_jacobsthal.end(), DisplayList());
-}
-
-void PmergeMe::DisplayS()
-{
-	for_each(this->_S.begin(), this->_S.end(), DisplayList());
-}
-
-void PmergeMe::DisplayPend()
-{
-	for_each(this->_pend.begin(), this->_pend.end(), DisplayList());
+	for_each(list_to_display.begin(), list_to_display.end(), DisplayList());
 }
 
 void PmergeMe::sort_pairs()
@@ -241,6 +241,8 @@ void PmergeMe::jacobsthal_generator ()
 
 std::list<unsigned int> PmergeMe::index_order_generator ()
 {
+
+	this->jacobsthal_generator();
 	std::list<unsigned int> index_order;
 
 	const unsigned long pend_size = this->_pend.size();

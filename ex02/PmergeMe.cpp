@@ -62,10 +62,12 @@ void PmergeMe::DisplayPend()
 
 void PmergeMe::sort_pairs()
 {
-	std::list<unsigned int>::iterator it = this->_list_to_sort.begin();
-	std::list<unsigned int>::iterator it_2 = this->_list_to_sort.begin();
+	this->_list_sorted_pairs = this->_list_to_sort;
 
-	unsigned long loop_count = this->_list_to_sort.size() / 2;
+	std::list<unsigned int>::iterator it = this->_list_sorted_pairs.begin();
+	std::list<unsigned int>::iterator it_2 = this->_list_sorted_pairs.begin();
+
+	unsigned long loop_count = this->_list_sorted_pairs.size() / 2;
 	it_2++;
 
 	while (loop_count > 0)
@@ -84,7 +86,7 @@ void PmergeMe::sort_pairs()
 	//DEBUG
 	int d = 0;
 	std::cout << "After sorting pairs : ";
-	for (std::list<unsigned int>::iterator it = this->_list_to_sort.begin(); it != this->_list_to_sort.end(); ++it)
+	for (std::list<unsigned int>::iterator it = this->_list_sorted_pairs.begin(); it != this->_list_sorted_pairs.end(); ++it)
 	{
 		std::cout << *it;
 		if (d % 2 == 1)
@@ -102,9 +104,9 @@ void PmergeMe::sort_pairs()
 
 void PmergeMe::insertion_sort_pairs ()
 {
-	std::list<unsigned int>::iterator it = this->_list_to_sort.begin();
+	std::list<unsigned int>::iterator it = this->_list_sorted_pairs.begin();
 	
-	for (unsigned long i = 0; i < this->_list_to_sort.size(); ++i)
+	for (unsigned long i = 0; i < this->_list_sorted_pairs.size(); ++i)
 	{
 		if (i%2 == 1)
 		{
@@ -116,6 +118,11 @@ void PmergeMe::insertion_sort_pairs ()
 		}
 		++it;
 	}
+
+	// for_each(this->_S.begin(), this->_S.end(), DisplayList());
+	// std::cout << std::endl;
+	// for_each(this->_pend.begin(), this->_pend.end(), DisplayList());
+	// std::cout << std::endl;
 
 	for (unsigned long index = 1; index < this->_S.size(); ++index)
 	{
@@ -155,20 +162,14 @@ void PmergeMe::insertion_sort_pairs ()
 
 	//Display for debug
 	std::cout << "After insertion_sort_pairs ";
+	std::cout << std::endl;
 
-	std::list<unsigned int>::iterator pend_it = this->_pend.begin();
-	for (std::list<unsigned int>::iterator it = this->_S.begin(); it != this->_S.end(); ++it)
-	{
-		std::cout << *pend_it << "-" << *it << " | ";
-		++pend_it;
-
-	}
-	if (this->_pend.size() % 2 == 1)
-	{
-		++pend_it;
-		std::cout << *pend_it;
-	}
-
+	std::cout << "S : ";
+	for_each(this->_S.begin(), this->_S.end(), DisplayList());
+	std::cout << std::endl;
+	std::cout << "Pend : ";
+	for_each(this->_pend.begin(), this->_pend.end(), DisplayList());
+	std::cout << std::endl;
 
 
 }
@@ -247,26 +248,105 @@ std::list<unsigned int> PmergeMe::index_order_generator ()
 {
 	std::list<unsigned int> index_order;
 
-	unsigned long pend_size;
+	unsigned long pend_size = this->_pend.size();
 
-	pend_size = this->_list_to_sort.size();
-	unsigned long index = 1;
+	std::cout << "pend_size = " << pend_size << std::endl;
 
-	while (pend_size > 0)
+	index_order.push_back(0);
+	index_order.push_back(2);
+	index_order.push_back(1);
+
+
+	unsigned long index_lowest = *(max_element(index_order.begin(), index_order.end()));
+	unsigned long index_highest = *(max_element(index_order.begin(), index_order.end())) + *(this->get_element_in_list(1, this->_jacobsthal));
+	std::cout << "index_lowest = " << index_lowest << std::endl;
+	std::cout << "index_highest = " << index_highest << std::endl;
+	
+	if (index_highest >= pend_size)
 	{
-
-		std::list<unsigned int>::iterator j_it = this->get_element_in_list(index, this->_jacobsthal);
-
-		while (*j_it > 0)
-		{
-			index_order.push_back(index + *j_it);
-			*j_it--;
-			
-		}
-
-		index++;
-		pend_size--;
+		index_highest = pend_size - 1;
 	}
+	while (index_lowest < index_highest)
+	{
+		index_order.push_back(index_highest);
+		index_highest--;
+	}
+
+	index_lowest = *(max_element(index_order.begin(), index_order.end()));
+	index_highest = *(max_element(index_order.begin(), index_order.end())) + *(this->get_element_in_list(2, this->_jacobsthal));
+	std::cout << "index_lowest = " << index_lowest << std::endl;
+	std::cout << "index_highest = " << index_highest << std::endl;
+
+	if (index_highest >= pend_size)
+	{
+		index_highest = pend_size - 1;
+	}
+	while (index_lowest < index_highest)
+	{
+		index_order.push_back(index_highest);
+		index_highest--;
+	}
+
+	index_lowest = *(max_element(index_order.begin(), index_order.end()));
+	index_highest = *(max_element(index_order.begin(), index_order.end())) + *(this->get_element_in_list(3, this->_jacobsthal));
+	std::cout << "index_lowest = " << index_lowest << std::endl;
+	std::cout << "index_highest = " << index_highest << std::endl;
+
+
+	if (index_highest >= pend_size)
+	{
+		index_highest = pend_size - 1;
+	}
+	while (index_lowest < index_highest)
+	{
+		index_order.push_back(index_highest);
+		index_highest--;
+	}
+
+
+	//std::cout << "index lowest " << index_lowest << " -> " << *(this->get_element_in_list(index_lowest, index_order)) << std::endl;
+
+	//index_highest =  + *(this->get_element_in_list(2, this->_jacobsthal));
+
+
+
+	//index_order.push_back(*(this->get_element_in_list(1, this->_jacobsthal)));
+
+
+
+
+	//unsigned long jacobsthal_size;
+
+	//jacobsthal_size = this->_jacobsthal.size();
+	
+	//unsigned long index = 3;
+
+
+
+
+
+	// unsigned long pend_size;
+
+	// pend_size = this->_pend.size();
+	// unsigned long index = 1;
+
+	// //y_{4},y_{3},y_{6},y_{5},y_{12},y_{11},y_{10},y_{9},y_{8},y_{7},y_{22},y_{21}
+
+	// while (pend_size > 0)
+	// {
+
+	// 	std::list<unsigned int>::iterator j_it = this->get_element_in_list(index, this->_jacobsthal);
+
+	// 	while (*j_it > 0)
+	// 	{
+	// 		index_order.push_back(index + *j_it);
+	// 		*j_it--;
+			
+	// 	}
+
+	// 	index++;
+	// 	pend_size--;
+	// }
 
 
 
@@ -277,116 +357,52 @@ std::list<unsigned int> PmergeMe::index_order_generator ()
 
 }
 
-void PmergeMe::binary_sort(unsigned int n_to_insert)
+unsigned long PmergeMe::binary_sort(unsigned int n_to_insert)
 {
+	// std::cout << "n_to_insert = " << n_to_insert << std::endl;
 
-	std::cout << n_to_insert << std::endl;
-
-	std::cout << "S = ";
-	this->DisplayS();
-	std::cout << std::endl;
-
-	// std::cout << "pend = ";
-	// this->DisplayPend();
+	// std::cout << "S = ";
+	// this->DisplayS();
 	// std::cout << std::endl;
 
-	unsigned long size_S = this->_S.size();
+	unsigned long left = 0;
+	unsigned long right = this->_S.size() -1 ;
+	unsigned long mid = 0;
 
-	std::cout << "size_S = " << size_S << std::endl;
-
-	//unsigned long ind_prev = 0 ;
-	//unsigned long ind_next = size_S - 1;
-	
-
-	std::list<unsigned int> :: iterator start = this->_S.begin();
-	std::list<unsigned int> :: iterator end = this->_S.end();
-
-	unsigned long ind_start = 0;
-	unsigned long ind_end = size_S - 1;
-
-	//start = this->_S.end();
-	//end = this->_S.begin();
-
-	std::cout << "lkjlkjljlkj = " << *start << std::endl;
-
-	while (start != end)
+	if (n_to_insert < *(this->get_element_in_list(0, this->_S)))
 	{
-		//size_S = size_S / 2;
+		//std::cout << "result = " << 0 <<std::endl;
 
-		unsigned long ind_mid = (ind_end - ind_start) / 2;
+		return 0;
+	}
 
-		std::list<unsigned int> :: iterator it_mid;
-		it_mid = this->get_element_in_list(ind_mid, this->_S);
+	if (n_to_insert > *(this->get_element_in_list(right, this->_S)))
+	{
+		//std::cout << "result = " << right <<std::endl;
 
-		if (n_to_insert < *it_mid)
-		{
-			while (end != it_mid)
-			{
-				--end;
-				--ind_end;
-			}
-		}
-
-		if (n_to_insert > *it_mid)
-		{
-			while (start != it_mid)
-			{
-				++start;
-				++ind_start;
-			}
-		}
-
-		std::cout << *it_mid <<std::endl;
-
-	
-		++start;
-
-
-
+		return right;
 	}
 
 
+	while (left < right)
+	{
+		mid = left + (right - left) / 2;
 
-	//std::list<unsigned int> :: iterator middle_prev = this->get_element_in_list(ind_prev, this->_S);
-	//std::list<unsigned int> :: iterator middle_next = this->get_element_in_list(ind_next, this->_S);
+		if (*(this->get_element_in_list(mid, this->_S)) == n_to_insert)
+		{
+			break;
+		}
+		else if (*(this->get_element_in_list(mid, this->_S)) < n_to_insert)
+		{
+			left = mid + 1;
+		}
+		else
+		{
+			right = mid - 1;
+		}
+	}
 
-	//std::cout << "ind_prev = " << ind_prev << " middle = " << *middle_prev <<std::endl;
-	//std::cout << "ind_next = " << ind_next << " middle = " << *middle_next <<std::endl;
-
-
-	// int debug = 0;
-	// while (!(n_to_insert > *middle_prev && n_to_insert < *middle_next)) /*|| middle_prev == start || middle_next == end*/
-	// {
-	// 	if (n_to_insert < *middle_prev && n_to_insert < *middle_next)
-	// 	{
-	// 		std::cout << ind_prev << " " << ind_next << " " << n_to_insert << " inferieur a "<< *middle_prev <<  " et à " << *middle_next <<std::endl;
-			
-	// 		unsigned long stop = ind_prev / 2;
-	// 		while (ind_prev != stop)
-	// 		{
-	// 			ind_prev--;
-	// 			ind_next--;
-	// 			--middle_prev;
-	// 			--middle_next;
-	// 		}
-	// 	}
-	// 	else if (n_to_insert > *middle_prev && n_to_insert > *middle_next)
-	// 	{
-	// 		std::cout << ind_prev << " " << ind_next << " " << n_to_insert << " superieur a " << *middle_prev <<  " et à " << *middle_next <<std::endl;
-	// 		unsigned long stop2 = ind_prev + ((size_S - ind_prev) / 2);
-
-	// 		while (ind_prev != stop2)
-	// 		{
-	// 			ind_prev++;
-	// 			ind_next++;
-	// 			++middle_prev;
-	// 			++middle_next;
-	// 		}
-
-	// 	}	
-	// 	debug++;
-	// }
-
-	//std::cout << *middle_prev << " " << *middle_next << std::endl;
+	//std::cout << "result = " << mid <<std::endl;
+	return mid;
 
 }

@@ -24,13 +24,15 @@ class PmergeMe
 
 		void jacobsthal_generator ();
 		std::list<unsigned int> index_order_generator ();
-		void binary_sort(unsigned int n_to_insert);
+		unsigned long binary_sort(unsigned int n_to_insert);
+
 
 	private :
 		std::list<unsigned int> _list_to_sort;
-		std::list<unsigned int> _jacobsthal;
+		std::list<unsigned int> _list_sorted_pairs;
 		std::list<unsigned int> _S;
 		std::list<unsigned int> _pend;
+		std::list<unsigned int> _jacobsthal;
 
 		void switch_it(std::list<unsigned int>::iterator & it, std::list<unsigned int>::iterator & it_2);
 		std::list<unsigned int>::iterator get_element_in_list(unsigned long ind, std::list<unsigned int> & list);

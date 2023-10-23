@@ -63,8 +63,33 @@ int main(int argc, char* argv[])
 	std::cout << std::endl;
 	std::cout << std::endl;
 
-	//pmm.binary_sort(198);
-	pmm.binary_sort(81);
+	// pmm.binary_sort(8);
+	// std::cout << "-------------" <<std::endl;	
+
+	// //pmm.binary_sort(198);
+	// pmm.binary_sort(12);
+	// std::cout << "-------------" <<std::endl;	
+
+	// pmm.binary_sort(23);
+	// std::cout << "-------------" <<std::endl;	
+
+	// pmm.binary_sort(34);
+	// std::cout << "-------------" <<std::endl;	
+
+	// pmm.binary_sort(45);
+	// std::cout << "-------------" <<std::endl;	
+
+
+	// pmm.binary_sort(56);
+	// std::cout << "-------------" <<std::endl;	
+
+	// pmm.binary_sort(87);
+	// std::cout << "-------------" <<std::endl;	
+
+	// pmm.binary_sort(870);
+	// std::cout << "-------------" <<std::endl;	
+
+
 	//pmm.binary_sort(108);
 	//pmm.binary_sort(176);
 	//pmm.binary_sort(8);

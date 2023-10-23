@@ -45,6 +45,9 @@ int main(int argc, char* argv[])
 
 	PmergeMe pmm = PmergeMe(list_to_sort);
 
+	//pmm.check_sort(pmm.get_list_to_sort());
+
+
 	std::cout << "Input : ";
 	pmm.DisplayListToSort();
 	std::cout << std::endl;

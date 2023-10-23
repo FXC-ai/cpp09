@@ -84,21 +84,21 @@ void PmergeMe::sort_pairs()
 	}
 
 	//DEBUG
-	int d = 0;
-	std::cout << "After sorting pairs : ";
-	for (std::list<unsigned int>::iterator it = this->_list_sorted_pairs.begin(); it != this->_list_sorted_pairs.end(); ++it)
-	{
-		std::cout << *it;
-		if (d % 2 == 1)
-		{
-			std::cout << " | ";
-		}
-		else
-		{
-			std::cout << "-";
-		}
-		d++;
-	}
+	// int d = 0;
+	// std::cout << "After sorting pairs : ";
+	// for (std::list<unsigned int>::iterator it = this->_list_sorted_pairs.begin(); it != this->_list_sorted_pairs.end(); ++it)
+	// {
+	// 	std::cout << *it;
+	// 	if (d % 2 == 1)
+	// 	{
+	// 		std::cout << " | ";
+	// 	}
+	// 	else
+	// 	{
+	// 		std::cout << "-";
+	// 	}
+	// 	d++;
+	// }
 
 }
 
@@ -118,11 +118,6 @@ void PmergeMe::insertion_sort_pairs ()
 		}
 		++it;
 	}
-
-	// for_each(this->_S.begin(), this->_S.end(), DisplayList());
-	// std::cout << std::endl;
-	// for_each(this->_pend.begin(), this->_pend.end(), DisplayList());
-	// std::cout << std::endl;
 
 	for (unsigned long index = 1; index < this->_S.size(); ++index)
 	{
@@ -161,15 +156,15 @@ void PmergeMe::insertion_sort_pairs ()
 	}
 
 	//Display for debug
-	std::cout << "After insertion_sort_pairs ";
-	std::cout << std::endl;
+	// std::cout << "After insertion_sort_pairs ";
+	// std::cout << std::endl;
 
-	std::cout << "S : ";
-	for_each(this->_S.begin(), this->_S.end(), DisplayList());
-	std::cout << std::endl;
-	std::cout << "Pend : ";
-	for_each(this->_pend.begin(), this->_pend.end(), DisplayList());
-	std::cout << std::endl;
+	// std::cout << "S : ";
+	// for_each(this->_S.begin(), this->_S.end(), DisplayList());
+	// std::cout << std::endl;
+	// std::cout << "Pend : ";
+	// for_each(this->_pend.begin(), this->_pend.end(), DisplayList());
+	// std::cout << std::endl;
 
 
 }
@@ -233,14 +228,14 @@ void PmergeMe::jacobsthal_generator ()
 		++i;
 	}
 
-	for (std::list<unsigned int>::iterator it = this->_jacobsthal.begin(); it != this->_jacobsthal.end(); ++it)
-	{
-		(*it) *= 2;
-	}
+	// for (std::list<unsigned int>::iterator it = this->_jacobsthal.begin(); it != this->_jacobsthal.end(); ++it)
+	// {
+	// 	(*it) *= 2;
+	// }
 
-	std::cout << "Jacobsthal sequence  = ";
-	this->DisplayJacobsthal();
-	//for_each(this->_jacobsthal.begin(), this->_jacobsthal.end(), DisplayList());
+	// std::cout << "Jacobsthal sequence  = ";
+	// this->DisplayJacobsthal();
+
 
 }
 
@@ -286,9 +281,6 @@ std::list<unsigned int> PmergeMe::index_order_generator ()
 		index_lowest = *(max_element(index_order.begin(), index_order.end()));
 		index_highest = *(max_element(index_order.begin(), index_order.end())) + *(this->get_element_in_list(count, this->_jacobsthal));
 		
-		// std::cout << "index_lowest = " << index_lowest << std::endl;
-		// std::cout << "index_highest = " << index_highest << std::endl;
-		
 		if (index_highest >= pend_size)
 		{
 			index_highest = pend_size - 1;
@@ -306,8 +298,8 @@ std::list<unsigned int> PmergeMe::index_order_generator ()
 		std::cerr << "Error : index_order.size() != pend_size" << std::endl;
 	}
 
-	std::cout << "index_order = ";
-	for_each(index_order.begin(), index_order.end(), DisplayList());
+	// std::cout << "index_order = ";
+	// for_each(index_order.begin(), index_order.end(), DisplayList());
 
 	return index_order;
 
@@ -340,53 +332,56 @@ unsigned long PmergeMe::binary_sort(unsigned int n_to_insert)
 void PmergeMe::insertion_sort()
 {
 
-	// std::cout << "S = ";
-	// this->DisplayS();
-	// std::cout << std::endl;
-
-
-	//unsigned int ind_to_insert = *(this->get_element_in_list(0, this->_pend));
-
 	std::list<unsigned int> index_order = this->index_order_generator();
 
 	std::cout << std::endl;
 
 	unsigned int index = 0;
 
-
-
 	while (index_order.size() > 0)
 	{
 		index = index_order.front();
-		//std::cout << "index = " << index << std::endl;
 
 		unsigned int value_to_insert = *(this->get_element_in_list(index, this->_pend));
-		std::cout << "value_to_insert = " << value_to_insert << std::endl;
-
 
 		unsigned long ind_to_insert = this->binary_sort(value_to_insert);
-		std::cout << "ind_to_insert = " << ind_to_insert << std::endl;
-
-
-
-		
 
 		std::list<unsigned int>::iterator it_insertion_S = this->get_element_in_list(ind_to_insert, this->_S);
-		//std::cout << "it_insertion_S = " << *it_insertion_S << std::endl;
 
 		this->_S.insert(it_insertion_S, value_to_insert);
 
-		std::cout << "S = ";
-		this->DisplayS();
-		std::cout << std::endl;
-
-
 		index_order.pop_front();
+
+		// std::cout << "S = ";
+		// this->DisplayS();
+		// std::cout << std::endl;
 	}
-
-
-	// std::cout << "Pend = ";
-	// this->DisplayPend();
+	// std::cout << "S = ";
+	// this->DisplayS();
 	// std::cout << std::endl;
 
+	this->check_sort(this->_S);
+}
+
+
+bool PmergeMe::check_sort(std::list<unsigned int>list_to_check)
+{
+	std::list<unsigned int>::iterator start = list_to_check.begin();
+	std::list<unsigned int>::iterator it_mover = list_to_check.begin();
+	std::list<unsigned int>::iterator end = list_to_check.end();
+
+	++it_mover;
+	for (; it_mover != end; ++it_mover)
+	{
+		//std::cout << "Je compare " << *start << " avec " << *it_mover <<std::endl;
+		if (*start > *it_mover)
+		{	
+			std::cout << "NON SORTED LIST " << *start << " " << *it_mover <<std::endl;
+			return false;
+		}
+		++start;
+	}
+
+	std::cout << "LISTE SORTED" <<std::endl;
+	return true;
 }

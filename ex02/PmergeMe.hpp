@@ -28,6 +28,8 @@ class PmergeMe
 
 		void insertion_sort();
 
+		bool check_sort(std::list<unsigned int>list_to_check);
+
 
 	private :
 		std::list<unsigned int> _list_to_sort;

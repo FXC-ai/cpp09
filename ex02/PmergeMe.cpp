@@ -279,66 +279,114 @@ std::list<unsigned int> PmergeMe::index_order_generator ()
 
 void PmergeMe::binary_sort(unsigned int n_to_insert)
 {
-	unsigned long size_S = this->_S.size();
-	unsigned long ind_prev = (this->_S.size() - 1) / 2;
-	unsigned long ind_next = ind_prev + 1;
 
-	(void) n_to_insert;
+	std::cout << n_to_insert << std::endl;
 
 	std::cout << "S = ";
 	this->DisplayS();
 	std::cout << std::endl;
-	std::cout << "pend = ";
-	this->DisplayPend();
-	std::cout << std::endl;
+
+	// std::cout << "pend = ";
+	// this->DisplayPend();
+	// std::cout << std::endl;
+
+	unsigned long size_S = this->_S.size();
+
+	std::cout << "size_S = " << size_S << std::endl;
+
+	//unsigned long ind_prev = 0 ;
+	//unsigned long ind_next = size_S - 1;
 	
 
-	std::list<unsigned int> :: iterator middle_prev = this->get_element_in_list(ind_prev, this->_S);
-	std::list<unsigned int> :: iterator middle_next = this->get_element_in_list(ind_next, this->_S);
+	std::list<unsigned int> :: iterator start = this->_S.begin();
+	std::list<unsigned int> :: iterator end = this->_S.end();
 
+	unsigned long ind_start = 0;
+	unsigned long ind_end = size_S - 1;
 
-	std::cout << "ind_prev = " << ind_prev << " middle = " << *middle_prev <<std::endl;
-	std::cout << "ind_next = " << ind_next << " middle = " << *middle_next <<std::endl;
+	//start = this->_S.end();
+	//end = this->_S.begin();
 
+	std::cout << "lkjlkjljlkj = " << *start << std::endl;
 
-	while (!(n_to_insert > *middle_prev && n_to_insert < *middle_next))
+	while (start != end)
 	{
-		if (n_to_insert < *middle_prev && n_to_insert < *middle_next)
+		//size_S = size_S / 2;
+
+		unsigned long ind_mid = (ind_end - ind_start) / 2;
+
+		std::list<unsigned int> :: iterator it_mid;
+		it_mid = this->get_element_in_list(ind_mid, this->_S);
+
+		if (n_to_insert < *it_mid)
 		{
-			
-			unsigned long stop = ind_prev / 2;
-			while (ind_prev != stop)
+			while (end != it_mid)
 			{
-				ind_prev--;
-				ind_next--;
-				--middle_prev;
-				--middle_next;
+				--end;
+				--ind_end;
 			}
-			std::cout << n_to_insert << " inferieur a "<< *middle_prev <<  " et à " << *middle_next <<std::endl;
 		}
-		else if (n_to_insert > *middle_prev && n_to_insert > *middle_next)
+
+		if (n_to_insert > *it_mid)
 		{
-			unsigned long stop2 = ind_prev + ((size_S - ind_prev) / 2);
-
-			while (ind_prev != stop2)
+			while (start != it_mid)
 			{
-				ind_prev++;
-				ind_next++;
-				++middle_prev;
-				++middle_next;
+				++start;
+				++ind_start;
 			}
+		}
 
-			std::cout << ind_prev << " " << ind_next << " " << n_to_insert << " superieur a " << *middle_prev <<  " et à " << *middle_next <<std::endl;
-		}	
+		std::cout << *it_mid <<std::endl;
+
+	
+		++start;
+
+
+
 	}
 
-	std::cout << *middle_prev << " " << *middle_next << std::endl;
-
-	//std::list<unsigned int> S1;
-	//std::list<unsigned int> S2;
-
-	
 
 
+	//std::list<unsigned int> :: iterator middle_prev = this->get_element_in_list(ind_prev, this->_S);
+	//std::list<unsigned int> :: iterator middle_next = this->get_element_in_list(ind_next, this->_S);
+
+	//std::cout << "ind_prev = " << ind_prev << " middle = " << *middle_prev <<std::endl;
+	//std::cout << "ind_next = " << ind_next << " middle = " << *middle_next <<std::endl;
+
+
+	// int debug = 0;
+	// while (!(n_to_insert > *middle_prev && n_to_insert < *middle_next)) /*|| middle_prev == start || middle_next == end*/
+	// {
+	// 	if (n_to_insert < *middle_prev && n_to_insert < *middle_next)
+	// 	{
+	// 		std::cout << ind_prev << " " << ind_next << " " << n_to_insert << " inferieur a "<< *middle_prev <<  " et à " << *middle_next <<std::endl;
+			
+	// 		unsigned long stop = ind_prev / 2;
+	// 		while (ind_prev != stop)
+	// 		{
+	// 			ind_prev--;
+	// 			ind_next--;
+	// 			--middle_prev;
+	// 			--middle_next;
+	// 		}
+	// 	}
+	// 	else if (n_to_insert > *middle_prev && n_to_insert > *middle_next)
+	// 	{
+	// 		std::cout << ind_prev << " " << ind_next << " " << n_to_insert << " superieur a " << *middle_prev <<  " et à " << *middle_next <<std::endl;
+	// 		unsigned long stop2 = ind_prev + ((size_S - ind_prev) / 2);
+
+	// 		while (ind_prev != stop2)
+	// 		{
+	// 			ind_prev++;
+	// 			ind_next++;
+	// 			++middle_prev;
+	// 			++middle_next;
+	// 		}
+
+	// 	}	
+	// 	debug++;
+	// }
+
+	//std::cout << *middle_prev << " " << *middle_next << std::endl;
 
 }

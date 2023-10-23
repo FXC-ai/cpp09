@@ -4,7 +4,7 @@
 int main(int argc, char* argv[])
 {
 
-	if (argc <= 1)
+	if (argc <= 2)
 	{
 		std::cerr << "Error" <<std::endl;
 		return 0;
@@ -21,12 +21,6 @@ int main(int argc, char* argv[])
 		argv++;
 	}
 
-	if (list_to_sort.size() < 3)
-	{
-		std::cout << "Error" <<std::endl;
-		return 0;
-	}
-
 	PmergeMe pmm = PmergeMe(list_to_sort);
 
 	std::cout << "Input : ";
@@ -39,10 +33,11 @@ int main(int argc, char* argv[])
 
 	//pmm.jacobsthal_generator();
 
-	pmm.insertion_sort();
+	pmm.binary_insertion_sort();
 
+	std::cout << "Sorted list = ";
 	pmm.diplayList(pmm.get_S());
-	std::cout << std::endl;
+	
 
 	return 0;
 }

@@ -50,10 +50,7 @@ std::list<unsigned int> PmergeMe::get_pend()
 	return this->_pend;
 }
 
-std::list<unsigned int> PmergeMe::get_jacobsthal()
-{
-	return this->_jacobsthal;
-}
+
 
 void PmergeMe::diplayList(std::list<unsigned int> list_to_display)
 {
@@ -200,30 +197,28 @@ std::list<unsigned int>::iterator PmergeMe::get_element_in_list(unsigned long in
 	return it;
 }
 
-void PmergeMe::jacobsthal_generator ()
+std::list<unsigned int> PmergeMe::jacobsthal_generator ()
 {
-	this->_jacobsthal.clear();
-	this->_jacobsthal.push_back(0);
-	this->_jacobsthal.push_back(1);
-	this->_jacobsthal.push_back(1);
+	std::list<unsigned int> jacobsthal;
 
-	SumList sum = for_each(this->_jacobsthal.begin(), this->_jacobsthal.end(), SumList());
+	jacobsthal.clear();
+	jacobsthal.push_back(0);
+	jacobsthal.push_back(1);
+	jacobsthal.push_back(1);
 
+	SumList sum = for_each(jacobsthal.begin(), jacobsthal.end(), SumList());
 
-	unsigned long i;
-
-	i = 2;
-
+	unsigned long i = 2;
 	while ((sum.get_sum_list()*2) <= this->_list_to_sort.size())
 	{
-		std::list<unsigned int>::iterator Jn_2 = this->get_element_in_list(i - 1, this->_jacobsthal); 
-		std::list<unsigned int>::iterator Jn_1 = this->get_element_in_list(i, this->_jacobsthal); 
+		std::list<unsigned int>::iterator Jn_2 = this->get_element_in_list(i - 1, jacobsthal); 
+		std::list<unsigned int>::iterator Jn_1 = this->get_element_in_list(i, jacobsthal); 
 
 		unsigned int r = *Jn_1 + (2 * (*Jn_2));
 
-		this->_jacobsthal.push_back(r);
+		jacobsthal.push_back(r);
 
-		sum = for_each(this->_jacobsthal.begin(), this->_jacobsthal.end(), SumList());
+		sum = for_each(jacobsthal.begin(), jacobsthal.end(), SumList());
 
 		++i;
 	}
@@ -235,14 +230,20 @@ void PmergeMe::jacobsthal_generator ()
 
 	// std::cout << "Jacobsthal sequence  = ";
 	// this->DisplayJacobsthal();
-
+	
+	
+	return jacobsthal;
 
 }
 
 std::list<unsigned int> PmergeMe::index_order_generator ()
 {
 
-	this->jacobsthal_generator();
+	std::list<unsigned int> jacobsthal = this->jacobsthal_generator();
+
+	//this->diplayList(jacobsthal);
+
+
 	std::list<unsigned int> index_order;
 
 	const unsigned long pend_size = this->_pend.size();
@@ -274,14 +275,14 @@ std::list<unsigned int> PmergeMe::index_order_generator ()
 	index_order.push_back(1);
 
 	unsigned long index_lowest = *(max_element(index_order.begin(), index_order.end()));
-	unsigned long index_highest = *(max_element(index_order.begin(), index_order.end())) + *(this->get_element_in_list(1, this->_jacobsthal));
+	unsigned long index_highest = *(max_element(index_order.begin(), index_order.end())) + *(this->get_element_in_list(1, jacobsthal));
 	
 	int count = 1;
 	while (index_order.size() != pend_size)
 	{
 
 		index_lowest = *(max_element(index_order.begin(), index_order.end()));
-		index_highest = *(max_element(index_order.begin(), index_order.end())) + *(this->get_element_in_list(count, this->_jacobsthal));
+		index_highest = *(max_element(index_order.begin(), index_order.end())) + *(this->get_element_in_list(count, jacobsthal));
 		
 		if (index_highest >= pend_size)
 		{
@@ -331,12 +332,10 @@ unsigned long PmergeMe::binary_sort(unsigned int n_to_insert)
 	return left;
 }
 
-void PmergeMe::insertion_sort()
+void PmergeMe::binary_insertion_sort()
 {
 
 	std::list<unsigned int> index_order = this->index_order_generator();
-
-	std::cout << std::endl;
 
 	unsigned int index = 0;
 

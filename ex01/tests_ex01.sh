@@ -67,3 +67,7 @@ echo "\033[1;34mError tests : \033[0m"
 echo ""
 
 ./RPN "9 9 9 9 9 9 9 9 9 9 * * * * * * * * *"
+
+echo ""
+
+make fclean

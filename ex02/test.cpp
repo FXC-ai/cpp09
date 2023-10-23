@@ -1,47 +1,66 @@
 #include <iostream>
-#include <vector>
+#include <list>
 
-int findInsertPosition(const std::vector<int>& vec, int value) {
-    int left = 0;
-    int right = vec.size() - 1;
 
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
+std::list<unsigned int>::iterator get_element_in_list(unsigned long ind, std::list<unsigned int> & list)
+{
+	std::list<unsigned int>::iterator it;
+	it = list.begin();
 
-        if (vec[mid] == value) {
-            return mid; // Value found, return the current index
+	while (ind > 0)
+	{
+		it++;
+		ind--;
+	}
+
+	return it;
+}
+
+unsigned long binary_sort(unsigned int n_to_insert, std::list<unsigned int> & S)
+{
+    unsigned long left = 0;
+    unsigned long right = S.size();
+    unsigned long mid = 0;
+
+    while (left < right)
+    {
+        mid = left + (right - left) / 2;
+
+        if (*(get_element_in_list(mid, S)) < n_to_insert)
+        {
+            left = mid + 1;
         }
-        else if (vec[mid] < value) {
-            left = mid + 1; // Search in the right half
-        }
-        else {
-            right = mid - 1; // Search in the left half
+        else
+        {
+            right = mid;
         }
     }
 
-    return left; // Return the index where the value should be inserted
+    return left;
+
 }
 
 int main() {
-    std::vector<int> myVector;
+    std::list<unsigned int> S;
 
-	myVector.push_back(1);
-	myVector.push_back(3);
-	myVector.push_back(5);
-	myVector.push_back(7);
-	myVector.push_back(9);
-	myVector.push_back(11);
-	myVector.push_back(13);
-	myVector.push_back(15);
-	myVector.push_back(17);
-	myVector.push_back(19);
+	S.push_back(1);
+	S.push_back(85);
+	S.push_back(90);
+	S.push_back(99);
+	S.push_back(100);
+	S.push_back(101);
 
 
-    int valueToInsert = 8;
+//1 85 90 99 100 101
+
+
+    int valueToInsert = 3;
     
-    int position = findInsertPosition(myVector, valueToInsert);
+    int position = binary_sort(valueToInsert, S);
 
     std::cout << "Value " << valueToInsert << " should be inserted at index " << position << std::endl;
+
+
 
     return 0;
 }

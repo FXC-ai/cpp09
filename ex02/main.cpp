@@ -36,6 +36,13 @@ int main(int argc, char* argv[])
 
 	//std::for_each(list_to_sort.begin(), list_to_sort.end(), DisplayList());
 
+	if (list_to_sort.size() < 3)
+	{
+		std::cout << "Error" <<std::endl;
+		return 0;
+	}
+
+
 	PmergeMe pmm = PmergeMe(list_to_sort);
 
 	std::cout << "Input : ";
@@ -58,10 +65,6 @@ int main(int argc, char* argv[])
 	std::cout << std::endl;
 
 
-
-	pmm.index_order_generator();
-	std::cout << std::endl;
-	std::cout << std::endl;
 
 	// pmm.binary_sort(8);
 	// std::cout << "-------------" <<std::endl;	
@@ -93,6 +96,9 @@ int main(int argc, char* argv[])
 	//pmm.binary_sort(108);
 	//pmm.binary_sort(176);
 	//pmm.binary_sort(8);
+
+	pmm.insertion_sort();
+
 	std::cout << std::endl;
 
 

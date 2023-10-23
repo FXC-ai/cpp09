@@ -26,12 +26,16 @@ class PmergeMe
 		std::list<unsigned int> index_order_generator ();
 		unsigned long binary_sort(unsigned int n_to_insert);
 
+		void insertion_sort();
+
 
 	private :
 		std::list<unsigned int> _list_to_sort;
 		std::list<unsigned int> _list_sorted_pairs;
+
 		std::list<unsigned int> _S;
 		std::list<unsigned int> _pend;
+		
 		std::list<unsigned int> _jacobsthal;
 
 		void switch_it(std::list<unsigned int>::iterator & it, std::list<unsigned int>::iterator & it_2);

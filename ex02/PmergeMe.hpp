@@ -21,6 +21,9 @@ class PmergeMe
 		void insertion_sort_pairs ();
 		void binary_insertion_sort();
 
+		void sort();
+
+
 		bool check_sort(std::list<unsigned int>list_to_check);
 
 

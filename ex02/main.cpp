@@ -27,13 +27,16 @@ int main(int argc, char* argv[])
 	pmm.diplayList(pmm.get_list_to_sort());
 	std::cout << std::endl;
 
-	pmm.sort_pairs();
+	// pmm.sort_pairs();
 
-	pmm.insertion_sort_pairs();
+	// pmm.insertion_sort_pairs();
 
 	//pmm.jacobsthal_generator();
 
-	pmm.binary_insertion_sort();
+	// pmm.binary_insertion_sort();
+
+	pmm.sort();
+
 
 	std::cout << "Sorted list = ";
 	pmm.diplayList(pmm.get_S());

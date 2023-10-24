@@ -365,6 +365,19 @@ void PmergeMe::binary_insertion_sort()
 }
 
 
+void PmergeMe::sort()
+{
+	this->sort_pairs();
+
+	this->insertion_sort_pairs();
+
+	//pmm.jacobsthal_generator();
+
+	this->binary_insertion_sort();
+
+}
+
+
 bool PmergeMe::check_sort(std::list<unsigned int>list_to_check)
 {
 	std::list<unsigned int>::iterator start = list_to_check.begin();

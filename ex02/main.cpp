@@ -32,8 +32,8 @@ int main(int argc, char* argv[])
 	pmm.sort_deq();
 
 
-	// std::cout << "Sorted list = ";
-	// pmm.diplayList(pmm.get_S());
+	std::cout << "Sorted list = ";
+	pmm.diplayL_deq(pmm.get_S_d());
 	
 
 	return 0;

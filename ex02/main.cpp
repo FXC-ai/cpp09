@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	std::list<unsigned int> list_to_sort;
+	std::deque<unsigned int> list_to_sort;
 
 	argv++;
 	while (argc > 1)
@@ -24,22 +24,16 @@ int main(int argc, char* argv[])
 	PmergeMe pmm = PmergeMe(list_to_sort);
 
 	std::cout << "Input : ";
-	pmm.diplayList(pmm.get_list_to_sort());
+	pmm.diplayL_deq(pmm.get_deque_to_sort());
 	std::cout << std::endl;
 
-	// pmm.sort_pairs();
-
-	// pmm.insertion_sort_pairs();
-
-	//pmm.jacobsthal_generator();
-
-	// pmm.binary_insertion_sort();
-
-	pmm.sort();
 
 
-	std::cout << "Sorted list = ";
-	pmm.diplayList(pmm.get_S());
+	pmm.sort_deq();
+
+
+	// std::cout << "Sorted list = ";
+	// pmm.diplayList(pmm.get_S());
 	
 
 	return 0;

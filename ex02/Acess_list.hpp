@@ -4,10 +4,10 @@
 #include <list>
 
 template <typename T>
-class Acess_list : public std::list<T>
+class Acess_list : public std::deque<T>
 {
 	public :
-		typedef typename std::list<T>::iterator iterator;
+		typedef typename std::deque<T>::iterator iterator;
 
 		iterator operator[](unsigned long index)
 		{

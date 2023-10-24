@@ -28,40 +28,41 @@ class SumList
 
 };
 
-PmergeMe::PmergeMe(std::deque<unsigned int>list_to_sort) : _list_to_sort(list_to_sort){};
+PmergeMe::PmergeMe(std::list<unsigned int>list_to_sort) : _list_to_sort(list_to_sort){};
 
-std::deque<unsigned int> PmergeMe::get_deque_to_sort()
+std::list<unsigned int> PmergeMe::get_list_to_sort()
 {
 	return this->_list_to_sort;
 }
 
-std::deque<unsigned int> PmergeMe::get_deque_sorted_pairs()
+std::list<unsigned int> PmergeMe::get_list_sorted_pairs()
 {
 	return this->_list_sorted_pairs;
 }
 
-std::deque<unsigned int> PmergeMe::get_S_d()
+std::list<unsigned int> PmergeMe::get_S()
 {
 	return this->_S;
 }
 
-std::deque<unsigned int> PmergeMe::get_pend_d()
+std::list<unsigned int> PmergeMe::get_pend()
 {
 	return this->_pend;
 }
 
 
-void PmergeMe::diplayL_deq(std::deque<unsigned int> list_to_display)
+
+void PmergeMe::diplayList(std::list<unsigned int> list_to_display)
 {
 	for_each(list_to_display.begin(), list_to_display.end(), DisplayList());
 }
 
-void PmergeMe::sort_pairs_deq()
+void PmergeMe::sort_pairs()
 {
 	this->_list_sorted_pairs = this->_list_to_sort;
 
-	std::deque<unsigned int>::iterator it = this->_list_sorted_pairs.begin();
-	std::deque<unsigned int>::iterator it_2 = this->_list_sorted_pairs.begin();
+	std::list<unsigned int>::iterator it = this->_list_sorted_pairs.begin();
+	std::list<unsigned int>::iterator it_2 = this->_list_sorted_pairs.begin();
 
 	unsigned long loop_count = this->_list_sorted_pairs.size() / 2;
 	it_2++;
@@ -82,7 +83,7 @@ void PmergeMe::sort_pairs_deq()
 	//DEBUG
 	// int d = 0;
 	// std::cout << "After sorting pairs : ";
-	// for (std::deque<unsigned int>::iterator it = this->_list_sorted_pairs.begin(); it != this->_list_sorted_pairs.end(); ++it)
+	// for (std::list<unsigned int>::iterator it = this->_list_sorted_pairs.begin(); it != this->_list_sorted_pairs.end(); ++it)
 	// {
 	// 	std::cout << *it;
 	// 	if (d % 2 == 1)
@@ -98,9 +99,9 @@ void PmergeMe::sort_pairs_deq()
 
 }
 
-void PmergeMe::insertion_sort_pairs_deq ()
+void PmergeMe::insertion_sort_pairs ()
 {
-	std::deque<unsigned int>::iterator it = this->_list_sorted_pairs.begin();
+	std::list<unsigned int>::iterator it = this->_list_sorted_pairs.begin();
 	
 	for (unsigned long i = 0; i < this->_list_sorted_pairs.size(); ++i)
 	{
@@ -115,32 +116,41 @@ void PmergeMe::insertion_sort_pairs_deq ()
 		++it;
 	}
 
-	// std::cout << "S : ";
-	// for_each(this->_S.begin(), this->_S.end(), DisplayList());
-	// std::cout << std::endl;
-	// std::cout << "Pend : ";
-	// for_each(this->_pend.begin(), this->_pend.end(), DisplayList());
-	// std::cout << std::endl;
-
-
-	for(unsigned long i = 1; i < this->_S.size(); ++i) 
+	for (unsigned long index = 1; index < this->_S.size(); ++index)
 	{
-		unsigned int key = this->_S[i];
-		unsigned int key_p = this->_pend[i];
-		int j = i - 1;
+		std::list<unsigned int>::iterator start = this->_S.begin();
+		std::list<unsigned int>::iterator it_current = this->get_element_in_list(index, this->_S);
+		std::list<unsigned int>::iterator it_mover = this->get_element_in_list(index - 1, this->_S);
 
-		while(j >= 0 && this->_S[j] > key) 
+		std::list<unsigned int>::iterator it_current_p = this->get_element_in_list(index, this->_pend);
+		std::list<unsigned int>::iterator it_mover_p = this->get_element_in_list(index - 1, this->_pend);
+
+		while (*it_current < *it_mover && it_mover != start)
 		{
-			this->_S[j + 1] = this->_S[j];
-			this->_pend[j + 1] = this->_pend[j];
-			j--;
-
+			--it_mover_p;
+			--it_mover;
 		}
-		this->_S[j + 1] = key;
-		this->_pend[j + 1] = key_p;
+
+		if (index == 1 && *it_current < *it_mover )
+		{
+			this->switch_it(it_mover_p, it_current_p);
+			this->switch_it(it_mover, it_current);
+		}
+		else if (it_mover == start && *it_current < *start)
+		{
+			this->_pend.push_front(*it_current_p);
+			this->_pend.erase(it_current_p);
+			this->_S.push_front(*it_current);
+			this->_S.erase(it_current);
+		}
+		else
+		{
+			this->_pend.insert(++it_mover_p, *it_current_p);
+			this->_pend.erase(it_current_p);
+			this->_S.insert(++it_mover, *it_current);
+			this->_S.erase(it_current);
+		}
 	}
-
-
 
 	//Display for debug
 	// std::cout << "After insertion_sort_pairs ";
@@ -156,7 +166,7 @@ void PmergeMe::insertion_sort_pairs_deq ()
 
 }
 
-void swap_in_list(std::deque<unsigned int>::iterator & it, std::deque<unsigned int>::iterator & it_2)
+void swap_in_list(std::list<unsigned int>::iterator & it, std::list<unsigned int>::iterator & it_2)
 {
 	unsigned int temp;
 
@@ -165,7 +175,7 @@ void swap_in_list(std::deque<unsigned int>::iterator & it, std::deque<unsigned i
 	*it_2 = temp;
 };
 
-void PmergeMe::switch_it(std::deque<unsigned int>::iterator & it, std::deque<unsigned int>::iterator & it_2)
+void PmergeMe::switch_it(std::list<unsigned int>::iterator & it, std::list<unsigned int>::iterator & it_2)
 {
 	unsigned int temp;
 
@@ -174,9 +184,9 @@ void PmergeMe::switch_it(std::deque<unsigned int>::iterator & it, std::deque<uns
 	*it_2 = temp;
 };
 
-std::deque<unsigned int>::iterator PmergeMe::get_element_in_list(unsigned long ind, std::deque<unsigned int> & list)
+std::list<unsigned int>::iterator PmergeMe::get_element_in_list(unsigned long ind, std::list<unsigned int> & list)
 {
-	std::deque<unsigned int>::iterator it;
+	std::list<unsigned int>::iterator it;
 	it = list.begin();
 
 	while (ind > 0)
@@ -187,9 +197,9 @@ std::deque<unsigned int>::iterator PmergeMe::get_element_in_list(unsigned long i
 	return it;
 }
 
-std::deque<unsigned int> PmergeMe::jacobsthal_generator ()
+std::list<unsigned int> PmergeMe::jacobsthal_generator ()
 {
-	std::deque<unsigned int> jacobsthal;
+	std::list<unsigned int> jacobsthal;
 
 	jacobsthal.clear();
 	jacobsthal.push_back(0);
@@ -201,8 +211,8 @@ std::deque<unsigned int> PmergeMe::jacobsthal_generator ()
 	unsigned long i = 2;
 	while ((sum.get_sum_list()*2) <= this->_list_to_sort.size())
 	{
-		std::deque<unsigned int>::iterator Jn_2 = this->get_element_in_list(i - 1, jacobsthal); 
-		std::deque<unsigned int>::iterator Jn_1 = this->get_element_in_list(i, jacobsthal); 
+		std::list<unsigned int>::iterator Jn_2 = this->get_element_in_list(i - 1, jacobsthal); 
+		std::list<unsigned int>::iterator Jn_1 = this->get_element_in_list(i, jacobsthal); 
 
 		unsigned int r = *Jn_1 + (2 * (*Jn_2));
 
@@ -213,14 +223,12 @@ std::deque<unsigned int> PmergeMe::jacobsthal_generator ()
 		++i;
 	}
 
-	for (std::deque<unsigned int>::iterator it = jacobsthal.begin(); it != jacobsthal.end(); ++it)
-	{
-		(*it) *= 2;
-	}
+	// for (std::list<unsigned int>::iterator it = this->_jacobsthal.begin(); it != this->_jacobsthal.end(); ++it)
+	// {
+	// 	(*it) *= 2;
+	// }
 
 	// std::cout << "Jacobsthal sequence  = ";
-	// for_each(jacobsthal.begin(), jacobsthal.end(), DisplayList());
-
 	// this->DisplayJacobsthal();
 	
 	
@@ -228,15 +236,15 @@ std::deque<unsigned int> PmergeMe::jacobsthal_generator ()
 
 }
 
-std::deque<unsigned int> PmergeMe::index_order_generator ()
+std::list<unsigned int> PmergeMe::index_order_generator ()
 {
 
-	std::deque<unsigned int> jacobsthal = this->jacobsthal_generator();
+	std::list<unsigned int> jacobsthal = this->jacobsthal_generator();
 
 	//this->diplayList(jacobsthal);
 
 
-	std::deque<unsigned int> index_order;
+	std::list<unsigned int> index_order;
 
 	const unsigned long pend_size = this->_pend.size();
 
@@ -324,14 +332,10 @@ unsigned long PmergeMe::binary_sort(unsigned int n_to_insert)
 	return left;
 }
 
-void PmergeMe::binary_insertion_sort_deq()
+void PmergeMe::binary_insertion_sort()
 {
 
-	std::deque<unsigned int> index_order = this->index_order_generator();
-
-	// std::cout << "index_order = ";
-	// for_each(index_order.begin(), index_order.end(), DisplayList());
-	// std::cout << std::endl;
+	std::list<unsigned int> index_order = this->index_order_generator();
 
 	unsigned int index = 0;
 
@@ -343,7 +347,7 @@ void PmergeMe::binary_insertion_sort_deq()
 
 		unsigned long ind_to_insert = this->binary_sort(value_to_insert);
 
-		std::deque<unsigned int>::iterator it_insertion_S = this->get_element_in_list(ind_to_insert, this->_S);
+		std::list<unsigned int>::iterator it_insertion_S = this->get_element_in_list(ind_to_insert, this->_S);
 
 		this->_S.insert(it_insertion_S, value_to_insert);
 
@@ -360,11 +364,25 @@ void PmergeMe::binary_insertion_sort_deq()
 	this->check_sort(this->_S);
 }
 
-bool PmergeMe::check_sort(std::deque<unsigned int>list_to_check)
+
+void PmergeMe::sort()
 {
-	std::deque<unsigned int>::iterator start = list_to_check.begin();
-	std::deque<unsigned int>::iterator it_mover = list_to_check.begin();
-	std::deque<unsigned int>::iterator end = list_to_check.end();
+	this->sort_pairs();
+
+	this->insertion_sort_pairs();
+
+	//pmm.jacobsthal_generator();
+
+	this->binary_insertion_sort();
+
+}
+
+
+bool PmergeMe::check_sort(std::list<unsigned int>list_to_check)
+{
+	std::list<unsigned int>::iterator start = list_to_check.begin();
+	std::list<unsigned int>::iterator it_mover = list_to_check.begin();
+	std::list<unsigned int>::iterator end = list_to_check.end();
 
 	++it_mover;
 	for (; it_mover != end; ++it_mover)
@@ -380,16 +398,4 @@ bool PmergeMe::check_sort(std::deque<unsigned int>list_to_check)
 
 	std::cout << "LISTE SORTED" <<std::endl;
 	return true;
-}
-
-void PmergeMe::sort_deq()
-{
-	this->sort_pairs_deq();
-
-
-	this->insertion_sort_pairs_deq();
-
-
-	this->binary_insertion_sort_deq();
-
 }

@@ -1,66 +1,63 @@
 #include <iostream>
-#include <list>
+#include <deque>
 
-
-std::list<unsigned int>::iterator get_element_in_list(unsigned long ind, std::list<unsigned int> & list)
+void insertion_sort(std::deque<unsigned int>& list_to_sort) 
 {
-	std::list<unsigned int>::iterator it;
-	it = list.begin();
-
-	while (ind > 0)
-	{
-		it++;
-		ind--;
-	}
-
-	return it;
-}
-
-unsigned long binary_sort(unsigned int n_to_insert, std::list<unsigned int> & S)
-{
-    unsigned long left = 0;
-    unsigned long right = S.size();
-    unsigned long mid = 0;
-
-    while (left < right)
+    for(int i = 1; i < 5; ++i) 
     {
-        mid = left + (right - left) / 2;
+        unsigned int key = list_to_sort[i];
+        int j = i - 1;
 
-        if (*(get_element_in_list(mid, S)) < n_to_insert)
+
+        while(j >= 0 && list_to_sort[j] > key) 
         {
-            left = mid + 1;
+            std::cout << "j = " << j <<std::endl;
+            list_to_sort[j + 1] = list_to_sort[j];
+            j--;
+
+            for(const auto& elem : list_to_sort) 
+            {
+                std::cout << elem << " ";
+            }
+            std::cout << std::endl;
+
         }
-        else
+        list_to_sort[j + 1] = key;
+        for(const auto& elem : list_to_sort) 
         {
-            right = mid;
+            std::cout << elem << " ";
         }
+        std::cout << std::endl;
+        std::cout << std::endl;
     }
-
-    return left;
-
 }
 
 int main() {
-    std::list<unsigned int> S;
+    std::deque<unsigned int> deq;
 
-	S.push_back(1);
-	S.push_back(85);
-	S.push_back(90);
-	S.push_back(99);
-	S.push_back(100);
-	S.push_back(101);
-
-
-//1 85 90 99 100 101
+    deq.push_back(5);
+    deq.push_back(3);
+    deq.push_back(8);
+    deq.push_back(4);
+    deq.push_back(2);
 
 
-    int valueToInsert = 3;
-    
-    int position = binary_sort(valueToInsert, S);
+    for(const auto& elem : deq) {
+        std::cout << elem << " ";
+    }
+    std::cout << std::endl;
 
-    std::cout << "Value " << valueToInsert << " should be inserted at index " << position << std::endl;
+    insertion_sort(deq);
 
+    // Displaying the sorted list
+    std::cout << std::endl;
+    std::cout << std::endl;
 
+    for(const auto& elem : deq) {
+        std::cout << elem << " ";
+    }
+    std::cout << std::endl;
 
     return 0;
 }
+

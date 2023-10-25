@@ -29,7 +29,7 @@ class SumList
 };
 
 
-PmergeMe::PmergeMe(std::list<unsigned int>list_to_sort, std::deque<unsigned int>deq_to_sort) : _list_to_sort(list_to_sort) _deq_to_sort(deq_to_sort){};
+PmergeMe::PmergeMe(std::list<unsigned int>list_to_sort, std::deque<unsigned int>deq_to_sort) : _list_to_sort(list_to_sort), _deq_to_sort(deq_to_sort){};
 
 
 
@@ -715,21 +715,49 @@ bool PmergeMe::check_sort(std::list<unsigned int>list_to_check)
 		//std::cout << "Je compare " << *start << " avec " << *it_mover <<std::endl;
 		if (*start > *it_mover)
 		{	
-			std::cout << "NON SORTED LIST " << *start << " " << *it_mover <<std::endl;
+			//std::cout << "NON SORTED LIST " << *start << " " << *it_mover <<std::endl;
 			return false;
 		}
 		++start;
 	}
 
-	std::cout << "LISTE SORTED" <<std::endl;
+	//std::cout << "LISTE SORTED" <<std::endl;
 	return true;
 }
 
-void PmergeMe::sortAll()
+void PmergeMe::sort_all()
 {
+
+	int max_display = 5;
+	std::cout << "Before: ";
+	for (std::list<unsigned int>::iterator it = this->_list_to_sort.begin(); it!= this->_list_to_sort.end() && max_display > 0; ++it)
+	{
+		std::cout << *it << " ";
+		max_display--;
+	}
+	std::cout << std::endl;
+
+    std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
 	this->sort();
-	this->check_sort()
+    std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed_seconds_list = end_time - start_time;
+
+	std::cout << elapsed_seconds_list.count() << std::endl;
+
+
+	max_display = 5;
+	for (std::list<unsigned int>::iterator it = this->_S.begin(); it!= this->_S.end() && max_display > 0; ++it)
+	{
+		std::cout << *it << " ";
+		max_display--;
+	}
+
+	//this->check_sort()
+	start_time = std::chrono::high_resolution_clock::now();
 	this->sort_deq();
-	this->check_sort_deq();
+	end_time = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed_seconds_deq = end_time - start_time;
+	std::cout << elapsed_seconds_deq.count() << std::endl;
+	//this->check_sort_deq();
 
 }

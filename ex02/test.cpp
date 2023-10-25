@@ -1,63 +1,42 @@
 #include <iostream>
-#include <deque>
 
-void insertion_sort(std::deque<unsigned int>& list_to_sort) 
-{
-    for(int i = 1; i < 5; ++i) 
-    {
-        unsigned int key = list_to_sort[i];
-        int j = i - 1;
-
-
-        while(j >= 0 && list_to_sort[j] > key) 
-        {
-            std::cout << "j = " << j <<std::endl;
-            list_to_sort[j + 1] = list_to_sort[j];
-            j--;
-
-            for(const auto& elem : list_to_sort) 
-            {
-                std::cout << elem << " ";
+class BubbleSort {
+public:
+    // Fonction membre pour trier un tableau en utilisant le tri à bulles.
+    static void sort(int arr[], int size) {
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                // Compare deux éléments adjacents et les échange si nécessaire.
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
             }
-            std::cout << std::endl;
-
         }
-        list_to_sort[j + 1] = key;
-        for(const auto& elem : list_to_sort) 
-        {
-            std::cout << elem << " ";
-        }
-        std::cout << std::endl;
-        std::cout << std::endl;
     }
-}
+};
 
 int main() {
-    std::deque<unsigned int> deq;
+    int arr[] = {64, 34, 25, 12, 22, 11, 90};
+    int size = sizeof(arr) / sizeof(arr[0]);
 
-    deq.push_back(5);
-    deq.push_back(3);
-    deq.push_back(8);
-    deq.push_back(4);
-    deq.push_back(2);
-
-
-    for(const auto& elem : deq) {
-        std::cout << elem << " ";
+    std::cout << "Tableau non trié : ";
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
     }
     std::cout << std::endl;
 
-    insertion_sort(deq);
+    // Appel de la fonction de tri à bulles
+    BubbleSort::sort(arr, size);
 
-    // Displaying the sorted list
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    for(const auto& elem : deq) {
-        std::cout << elem << " ";
+    std::cout << "Tableau trié : ";
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
     }
     std::cout << std::endl;
 
     return 0;
 }
+
 

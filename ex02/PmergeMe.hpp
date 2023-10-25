@@ -53,15 +53,18 @@ class PmergeMe
 		void binary_insertion_sort_deq();
 
 		void switch_it(std::list<unsigned int>::iterator & it, std::list<unsigned int>::iterator & it_2);
-		std::list<unsigned int>::iterator get_element_in_list(unsigned long ind, std::list<unsigned int> & list);
-		std::list<unsigned int> jacobsthal_generator ();
-		std::list<unsigned int> index_order_generator ();
-		unsigned long binary_sort(unsigned int n_to_insert);
-
 		void switch_it_deq(std::deque<unsigned int>::iterator & it, std::deque<unsigned int>::iterator & it_2);
+		
+		std::list<unsigned int>::iterator get_element_in_list(unsigned long ind, std::list<unsigned int> & list);
 		std::deque<unsigned int>::iterator get_element_in_deq(unsigned long ind, std::deque<unsigned int> & list);
+		
+		std::list<unsigned int> jacobsthal_generator ();
 		std::deque<unsigned int> jacobsthal_generator_deq ();
+		
+		std::list<unsigned int> index_order_generator ();
 		std::deque<unsigned int> index_order_generator_deq ();
+		
+		unsigned long binary_sort(unsigned int n_to_insert);
 		unsigned long binary_sort_deq(unsigned int n_to_insert);
 };
 

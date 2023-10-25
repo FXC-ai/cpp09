@@ -728,6 +728,16 @@ bool PmergeMe::check_sort(std::list<unsigned int>list_to_check)
 void PmergeMe::sort_all()
 {
 
+    std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
+	this->sort();
+    std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed_seconds_list = end_time - start_time;
+
+	start_time = std::chrono::high_resolution_clock::now();
+	this->sort_deq();
+	end_time = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed_seconds_deq = end_time - start_time;
+
 	int max_display = 5;
 	std::cout << "Before: ";
 	for (std::list<unsigned int>::iterator it = this->_list_to_sort.begin(); it!= this->_list_to_sort.end() && max_display > 0; ++it)
@@ -735,29 +745,22 @@ void PmergeMe::sort_all()
 		std::cout << *it << " ";
 		max_display--;
 	}
+
 	std::cout << std::endl;
 
-    std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
-	this->sort();
-    std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> elapsed_seconds_list = end_time - start_time;
-
-	std::cout << elapsed_seconds_list.count() << std::endl;
-
-
 	max_display = 5;
+	std::cout << "After:  ";
 	for (std::list<unsigned int>::iterator it = this->_S.begin(); it!= this->_S.end() && max_display > 0; ++it)
 	{
 		std::cout << *it << " ";
 		max_display--;
 	}
+	std::cout << std::endl;
 
-	//this->check_sort()
-	start_time = std::chrono::high_resolution_clock::now();
-	this->sort_deq();
-	end_time = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> elapsed_seconds_deq = end_time - start_time;
-	std::cout << elapsed_seconds_deq.count() << std::endl;
-	//this->check_sort_deq();
+
+
+	std::cout << "Time to process a range of " << this->_list_to_sort.size() << " elements: " << elapsed_seconds_list.count() << " seconds" << std::endl;
+	std::cout << "Time to process a range of " << this->_deq_to_sort.size() << " elements: " << elapsed_seconds_deq.count() << " seconds" << std::endl;
+
 
 }

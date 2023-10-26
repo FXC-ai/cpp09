@@ -28,10 +28,11 @@ class SumList
 };
 
 PmergeMe::PmergeMe (){};
+PmergeMe::~PmergeMe (){};
 
 PmergeMe::PmergeMe(std::list<unsigned int>list_to_sort, std::deque<unsigned int>deq_to_sort) : _list_to_sort(list_to_sort), _deq_to_sort(deq_to_sort){};
 
-PmergeMe & PmergeMe::operator=(const Pmerge &rhs)
+PmergeMe & PmergeMe::operator=(const PmergeMe &rhs)
 {
 	if (this != &rhs)
 	{
@@ -40,49 +41,56 @@ PmergeMe & PmergeMe::operator=(const Pmerge &rhs)
 		this->_S = rhs.get_S();
 		this->_pend = rhs.get_pend();
 
-		this->_
+		this->_deq_to_sort = rhs.get_deque_to_sort();
+		this->_deq_sorted_pairs = rhs.get_deque_sorted_pairs();
+		this->_S_d = rhs.get_S_d();
+		this->_pend_d = rhs.get_pend_d();
 
 	}
-
+	return *this;
 }
 
+PmergeMe::PmergeMe(const PmergeMe &rhs)
+{
+	*this = rhs;
+}
 
-std::list<unsigned int> PmergeMe::get_list_to_sort()
+std::list<unsigned int> PmergeMe::get_list_to_sort () const
 {
 	return this->_list_to_sort;
 }
 
-std::list<unsigned int> PmergeMe::get_list_sorted_pairs()
+std::list<unsigned int> PmergeMe::get_list_sorted_pairs() const
 {
 	return this->_list_sorted_pairs;
 }
 
-std::list<unsigned int> PmergeMe::get_S()
+std::list<unsigned int> PmergeMe::get_S() const
 {
 	return this->_S;
 }
 
-std::list<unsigned int> PmergeMe::get_pend()
+std::list<unsigned int> PmergeMe::get_pend() const
 {
 	return this->_pend;
 }
 
-std::deque<unsigned int> PmergeMe::get_deque_to_sort()
+std::deque<unsigned int> PmergeMe::get_deque_to_sort() const
 {
 	return this->_deq_to_sort;
 }
 
-std::deque<unsigned int> PmergeMe::get_deque_sorted_pairs()
+std::deque<unsigned int> PmergeMe::get_deque_sorted_pairs() const
 {
 	return this->_deq_sorted_pairs;
 }
 
-std::deque<unsigned int> PmergeMe::get_S_d()
+std::deque<unsigned int> PmergeMe::get_S_d() const
 {
 	return this->_S_d;
 }
 
-std::deque<unsigned int> PmergeMe::get_pend_d()
+std::deque<unsigned int> PmergeMe::get_pend_d() const
 {
 	return this->_pend_d;
 }
@@ -96,8 +104,6 @@ void PmergeMe::diplayDeq(std::deque<unsigned int> list_to_display)
 {
 	for_each(list_to_display.begin(), list_to_display.end(), DisplayList());
 }
-
-
 
 bool PmergeMe::check_sort(std::list<unsigned int>list_to_check)
 {
@@ -162,7 +168,6 @@ void PmergeMe::sort_all()
 		max_display--;
 	}
 
-
 	if (this->_list_to_sort.size() > 5)
 	{
 		std::cout << "[...]";
@@ -185,8 +190,8 @@ void PmergeMe::sort_all()
 
 	std::cout << std::endl;
 
-	std::cout << "Time to process a range of " << this->_list_to_sort.size() << " elements with std::list : " << elapsed_seconds_list.count() << " seconds" << std::endl;
-	std::cout << "Time to process a range of " << this->_deq_to_sort.size() << " elements with std::deque : " << elapsed_seconds_deq.count() << " seconds" << std::endl;
+	std::cout << "Time to process a range of " << this->_list_to_sort.size() << " elements with std::list : " << elapsed_seconds_list.count() * 100000 << " us" << std::endl;
+	std::cout << "Time to process a range of " << this->_deq_to_sort.size() << " elements with std::deque : " << elapsed_seconds_deq.count() * 100000 << " us" << std::endl;
 }
 
 void PmergeMe::sort()

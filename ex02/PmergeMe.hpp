@@ -9,23 +9,25 @@ class PmergeMe
 {
 	public :
 		PmergeMe();
+		~PmergeMe();
 		PmergeMe(std::list<unsigned int>list_to_sort, std::deque<unsigned int>deq_to_sort);
-		PmergeMe & operator=(const Pmerge &rhs);
+		PmergeMe & operator=(const PmergeMe &rhs);
+
+		PmergeMe(const PmergeMe &rhs);
 
 
-		std::list<unsigned int> get_list_to_sort();
-		std::list<unsigned int> get_list_sorted_pairs();
-		std::list<unsigned int> get_S();
-		std::list<unsigned int> get_pend();
+		std::list<unsigned int> get_list_to_sort() const;
+		std::list<unsigned int> get_list_sorted_pairs() const;
+		std::list<unsigned int> get_S() const;
+		std::list<unsigned int> get_pend() const;
 
-		std::deque<unsigned int> get_deque_to_sort();
-		std::deque<unsigned int> get_deque_sorted_pairs();
-		std::deque<unsigned int> get_S_d();
-		std::deque<unsigned int> get_pend_d();
+		std::deque<unsigned int> get_deque_to_sort() const;
+		std::deque<unsigned int> get_deque_sorted_pairs() const;
+		std::deque<unsigned int> get_S_d() const;
+		std::deque<unsigned int> get_pend_d() const;
 
 		void diplayList(std::list<unsigned int> list_to_display);
 		void diplayDeq(std::deque<unsigned int> list_to_display);
-
 
 		bool check_sort(std::list<unsigned int>list_to_check);
 		bool check_sort_deq(std::deque<unsigned int>list_to_check);

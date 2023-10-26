@@ -70,18 +70,3 @@ echo "\n"
 
 ./PmergeMe `jot -r 5000 1 100000 | tr '\n' ' '`
 echo "\n"
-
-./PmergeMe `jot -r 6000 1 100000 | tr '\n' ' '`
-echo "\n"
-
-./PmergeMe `jot -r 7000 1 100000 | tr '\n' ' '`
-echo "\n"
-
-./PmergeMe `jot -r 8000 1 100000 | tr '\n' ' '`
-echo "\n"
-
-./PmergeMe `jot -r 9000 1 100000 | tr '\n' ' '`
-echo "\n"
-
-./PmergeMe `jot -r 10000 1 100000 | tr '\n' ' '`
-echo "\n"

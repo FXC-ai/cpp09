@@ -27,7 +27,25 @@ class SumList
 		unsigned long long _sum_list;
 };
 
+PmergeMe::PmergeMe (){};
+
 PmergeMe::PmergeMe(std::list<unsigned int>list_to_sort, std::deque<unsigned int>deq_to_sort) : _list_to_sort(list_to_sort), _deq_to_sort(deq_to_sort){};
+
+PmergeMe & PmergeMe::operator=(const Pmerge &rhs)
+{
+	if (this != &rhs)
+	{
+		this->_list_to_sort = rhs.get_list_to_sort();
+		this->_list_sorted_pairs = rhs.get_list_sorted_pairs();
+		this->_S = rhs.get_S();
+		this->_pend = rhs.get_pend();
+
+		this->_
+
+	}
+
+}
+
 
 std::list<unsigned int> PmergeMe::get_list_to_sort()
 {
@@ -79,19 +97,6 @@ void PmergeMe::diplayDeq(std::deque<unsigned int> list_to_display)
 	for_each(list_to_display.begin(), list_to_display.end(), DisplayList());
 }
 
-void PmergeMe::sort()
-{
-	this->sort_pairs();
-	this->insertion_sort_pairs();
-	this->binary_insertion_sort();
-}
-
-void PmergeMe::sort_deq()
-{
-	this->sort_pairs_deq();
-	this->insertion_sort_pairs_deq();
-	this->binary_insertion_sort_deq();
-}
 
 
 bool PmergeMe::check_sort(std::list<unsigned int>list_to_check)
@@ -133,6 +138,11 @@ bool PmergeMe::check_sort_deq(std::deque<unsigned int>list_to_check)
 
 void PmergeMe::sort_all()
 {
+
+	if (this->_deq_to_sort.size() == 0 || this->_list_to_sort.size() == 0)
+	{
+		return;
+	}
 
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
 	this->sort();
@@ -177,6 +187,20 @@ void PmergeMe::sort_all()
 
 	std::cout << "Time to process a range of " << this->_list_to_sort.size() << " elements with std::list : " << elapsed_seconds_list.count() << " seconds" << std::endl;
 	std::cout << "Time to process a range of " << this->_deq_to_sort.size() << " elements with std::deque : " << elapsed_seconds_deq.count() << " seconds" << std::endl;
+}
+
+void PmergeMe::sort()
+{
+	this->sort_pairs();
+	this->insertion_sort_pairs();
+	this->binary_insertion_sort();
+}
+
+void PmergeMe::sort_deq()
+{
+	this->sort_pairs_deq();
+	this->insertion_sort_pairs_deq();
+	this->binary_insertion_sort_deq();
 }
 
 void PmergeMe::sort_pairs()
